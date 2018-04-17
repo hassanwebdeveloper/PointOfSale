@@ -1,4 +1,5 @@
-﻿using System;
+﻿using POSRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,29 @@ namespace InventoryManagementSystem
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            SplashScreen splash = new SplashScreen();
+
+
+            Task dbInitializerTask = new Task(() =>
+            {
+                try
+                {
+                    POSDbUtility.InitializeDatabases();
+                    splash.Invoke(new Action(() => { splash.Close(); }));
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            });
+
+            dbInitializerTask.Start();
+
+            splash.ShowDialog();
+            Application.Run(new LoginForm());
         }
     }
 }

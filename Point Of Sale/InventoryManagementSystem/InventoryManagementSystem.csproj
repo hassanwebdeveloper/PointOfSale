@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +34,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BarcodeLib">
+      <HintPath>..\..\..\..\Barcode\barcode_bin\BarcodeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,14 +59,99 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManageInventoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageInventoryForm.Designer.cs">
+      <DependentUpon>ManageInventoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManageVendorsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageVendorsForm.Designer.cs">
+      <DependentUpon>ManageVendorsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="POSItemInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="POSItemInfoForm.Designer.cs">
+      <DependentUpon>POSItemInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrintBarcodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PrintBarcodeForm.Designer.cs">
+      <DependentUpon>PrintBarcodeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepresentativeInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RepresentativeInfoForm.Designer.cs">
+      <DependentUpon>RepresentativeInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchPOSItemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchPOSItemForm.Designer.cs">
+      <DependentUpon>SearchPOSItemForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TSCLIB_DLL.cs" />
+    <Compile Include="UpdateCategoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateCategoryForm.Designer.cs">
+      <DependentUpon>UpdateCategoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateItemTypeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateItemTypeForm.Designer.cs">
+      <DependentUpon>UpdateItemTypeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VendorInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VendorInfoForm.Designer.cs">
+      <DependentUpon>VendorInfoForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageInventoryForm.resx">
+      <DependentUpon>ManageInventoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageVendorsForm.resx">
+      <DependentUpon>ManageVendorsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="POSItemInfoForm.resx">
+      <DependentUpon>POSItemInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintBarcodeForm.resx">
+      <DependentUpon>PrintBarcodeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -63,6 +161,30 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RepresentativeInfoForm.resx">
+      <DependentUpon>RepresentativeInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchPOSItemForm.resx">
+      <DependentUpon>SearchPOSItemForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateCategoryForm.resx">
+      <DependentUpon>UpdateCategoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateItemTypeForm.resx">
+      <DependentUpon>UpdateItemTypeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VendorInfoForm.resx">
+      <DependentUpon>VendorInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\POSRepository.POSDb.RepresentativeInfo.datasource" />
+    <None Include="Properties\DataSources\POSRepository.POSDb.VendorInfo.datasource" />
+    <None Include="Properties\DataSources\POSRepository.POSItemCategory.datasource" />
+    <None Include="Properties\DataSources\POSRepository.POSItemInfo.datasource" />
+    <None Include="Properties\DataSources\POSRepository.POSItemType.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -72,9 +194,25 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="TSCLIB.lib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\POSRepository\POSRepository.csproj">
+      <Project>{3d023b59-cee9-44c8-b090-b0d2a24141ba}</Project>
+      <Name>POSRepository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TSCLIB.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
