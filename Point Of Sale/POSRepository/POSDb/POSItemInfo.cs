@@ -56,7 +56,7 @@ namespace POSRepository
 
         public virtual List<POSItemTransactionItem> Transactions { get; set; }
 
-        public virtual List<POSBillItemInfo> Items { get; set; }
+        public virtual List<POSBillItemInfo> BillItems { get; set; }
 
         [NotMapped]
         public int RemaningQuantity
@@ -283,6 +283,17 @@ namespace POSRepository
 
                 return barCode;
             }
+        }
+
+        public int GetTotalProfit(int total, int quantity)
+        {
+            int profit = 0;
+
+            int actualTotal = this.BuyingPrice * quantity;
+
+            profit = total - actualTotal;
+
+            return profit;
         }
     }
 }

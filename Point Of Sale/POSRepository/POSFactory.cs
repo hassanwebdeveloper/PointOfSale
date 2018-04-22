@@ -66,7 +66,7 @@ namespace POSRepository
             return item;
         }
 
-        public static POSItemTransactionItem CreatePOSItemTransactionItem(POSItemInfo item, bool isPurchased, int itemsCount)
+        public static POSItemTransactionItem CreatePOSItemTransactionItem(POSItemInfo item, bool isPurchased, int itemsCount, int itemRate)
         {
             POSItemTransactionItem transactionItem = new POSItemTransactionItem();
 
@@ -74,6 +74,7 @@ namespace POSRepository
             transactionItem.IsPurchased = isPurchased;
             transactionItem.ItemCount = itemsCount;
             transactionItem.TransactionTime = DateTime.Now;
+            transactionItem.ItemRate = itemRate;
 
             return transactionItem;
         }

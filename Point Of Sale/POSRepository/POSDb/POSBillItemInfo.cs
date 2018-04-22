@@ -73,5 +73,24 @@ namespace POSRepository
             }
         }
         
+        public int Profit
+        {
+            get
+            {
+                int profit = 0;
+
+                profit = this.PosItem1.GetTotalProfit(this.Total, this.Quantity);
+
+                return profit;
+            }
+        }
+
+        public DateTime BillDate
+        {
+            get
+            {
+                return this.PosBill.BillCreatedDate;
+            }
+        }
     }
 }

@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheckComboBoxTest {
+namespace POSReports
+{
     public class CCBoxItem {
         private int val;
         public int Value {

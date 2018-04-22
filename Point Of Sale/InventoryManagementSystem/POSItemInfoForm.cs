@@ -243,7 +243,7 @@ namespace InventoryManagementSystem
                         bool newPurchase = false;
                         bool newReturn = false;
 
-                        if (this.mItemToUpdate.TotalItemsPurchased == itemsCount)
+                        if (this.mItemToUpdate.TotalItemsPurchased != itemsCount)
                         {
                             if (this.mItemToUpdate.TotalItemsPurchased < itemsCount)
                             {
@@ -266,7 +266,7 @@ namespace InventoryManagementSystem
                             string errorMsg = string.Empty;
                             if (newPurchase)
                             {
-                                POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, true, itemsCount - this.mItemToUpdate.TotalItemsPurchased);
+                                POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, true, itemsCount - this.mItemToUpdate.TotalItemsPurchased, buyingPrice);
 
                                 if (transactionItem != null)
                                 {
@@ -277,7 +277,7 @@ namespace InventoryManagementSystem
 
                             if (newReturn)
                             {
-                                POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, false, this.mItemToUpdate.TotalItemsPurchased - itemsCount);
+                                POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, false, this.mItemToUpdate.TotalItemsPurchased - itemsCount, buyingPrice);
 
                                 if (transactionItem != null)
                                 {
@@ -413,7 +413,7 @@ namespace InventoryManagementSystem
 
                 foreach (POSItemInfo item in this.mItems)
                 {
-                    transactionItems.Add(POSFactory.CreatePOSItemTransactionItem(item, true, item.TotalItemsPurchased));
+                    transactionItems.Add(POSFactory.CreatePOSItemTransactionItem(item, true, item.TotalItemsPurchased, item.BuyingPrice));
                 }
                 
                 POSItemTransactionInfo purchase = POSFactory.CreatePOSItemTransactionInfo(transactionItems);

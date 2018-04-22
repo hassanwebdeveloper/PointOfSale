@@ -5,7 +5,9 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
 
-namespace CheckComboBoxTest {
+namespace POSReports
+{
+    
     public class CheckedComboBox : ComboBox {
         /// <summary>
         /// Internal class to represent the dropdown list of the CheckedComboBox

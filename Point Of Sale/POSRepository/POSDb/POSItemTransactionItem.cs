@@ -25,5 +25,7 @@ namespace POSRepository
         public int ItemCount { get; set; }
 
         public DateTime TransactionTime { get; set; }
+
+        public int ItemRate { get; set; }
     }
 }

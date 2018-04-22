@@ -135,5 +135,17 @@ namespace POSRepository
             }
         }
 
+        [NotMapped]
+        public int TotalSalesManCommision
+        {
+            get
+            {
+                int totalCommision = this.SalesMan.GetSalesManCommision(this.BillItems);
+
+                return totalCommision;
+            }
+        }
+
+
     }
 }

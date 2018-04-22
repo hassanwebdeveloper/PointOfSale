@@ -59,5 +59,28 @@ namespace POSRepository
                 return barCode;
             }
         }
+
+        public int GetSalesManCommision(List<POSBillItemInfo> billItems)
+        {
+            int commision = 0;
+
+            if (this.Commisioned)
+            {
+                if (this.InPercent)
+                {
+                    foreach (POSBillItemInfo item in billItems)
+                    {
+                        commision += (item.Total * this.Commision) / 100;
+                    }
+                }
+                else
+                {
+                    commision = this.Commision * billItems.Count;
+                }
+                
+            }
+
+            return commision;
+        }
     }
 }

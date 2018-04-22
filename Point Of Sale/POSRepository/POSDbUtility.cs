@@ -831,6 +831,17 @@ namespace POSRepository
             return lstPOSSalesMans;
         }
 
+        public static List<POSBillInfo> GetAllPOSBillInfo(DateTime fromDate, DateTime toDate)
+        {
+            List<POSBillInfo> lstPOSSalesMans = new List<POSBillInfo>();
+
+            lstPOSSalesMans = (from posBill in mDbContext.POSBills.Include("BillItems.PosItem1")
+                               where posBill != null where posBill.BillCreatedDate >= fromDate && posBill.BillCreatedDate < toDate
+                               select posBill).ToList();
+
+            return lstPOSSalesMans;
+        }
+
         public static POSStatusCodes AddPOSBillInfo(POSBillInfo posBill, ref string errorMsg, bool saveChanges)
         {
             POSStatusCodes status = POSStatusCodes.Failed;
@@ -908,7 +919,7 @@ namespace POSRepository
 
         #endregion POSItems
 
-        #region POSBillInfo
+        #region POSBillItemInfo
 
         public static List<POSBillItemInfo> GetAllPOSBillItemInfo()
         {
