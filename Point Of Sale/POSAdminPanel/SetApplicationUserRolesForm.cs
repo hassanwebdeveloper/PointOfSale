@@ -11,14 +11,14 @@ using System.Windows.Forms;
 
 namespace POSAdminPanel
 {
-    public partial class SetApplicationUserRolesForm : Form
+    public partial class SetApplicationUserRoles : Form
     {
-        public SetApplicationUserRolesForm()
+        public SetApplicationUserRoles()
         {
             InitializeComponent();
         }
 
-        public SetApplicationUserRolesForm(POSAppUser appUser)
+        public SetApplicationUserRoles(POSAppUser appUser)
         {
             InitializeComponent();
 
@@ -35,6 +35,38 @@ namespace POSAdminPanel
                 this.chxCreateBill.Checked = appUser.CreateBill;
                 this.chxRefundBill.Checked = appUser.RefundBill;
                 this.chxSearchItems.Checked = appUser.SearchItems;
+                this.chxViewInvExpenses.Checked = appUser.ViewInvExpense;
+                this.chxUpdateInvExpenses.Checked = appUser.UpdateInvExpense;
+                this.chxViewPosExpenses.Checked = appUser.ViewPosExpense;
+                this.chxUpdatePosExpenses.Checked = appUser.UpdatePosExpense;
+                this.chxFastRunningReport.Checked = appUser.FastRunningReport;
+                this.chxAccountsReport.Checked = appUser.AccountReport;
+                this.chxProfitAndSale.Checked = appUser.ProfitAndSaleReport;
+                this.chxEmployeeReport.Checked = appUser.EmployeeReport;
+                this.chxStockReport.Checked = appUser.StockReport;
+                this.chxDailyReport.Checked = appUser.DailyReport;
+
+                UpdateCheckBoxesState(appUser.IsAdmin);
+
+                this.Roles = POSComonUtility.PopulateRoles(this.chxAdmin.Checked,
+                                                        this.chxViewItems.Checked,
+                                                        this.chxUpdateItems.Checked,
+                                                        this.chxViewVendors.Checked,
+                                                        this.chxUpdateVendors.Checked,
+                                                        this.chxPrintBarcode.Checked,
+                                                        this.chxCreateBill.Checked,
+                                                        this.chxRefundBill.Checked,
+                                                        this.chxSearchItems.Checked,
+                                                        this.chxViewInvExpenses.Checked,
+                                                        this.chxUpdateInvExpenses.Checked,
+                                                        this.chxViewPosExpenses.Checked,
+                                                        this.chxUpdatePosExpenses.Checked,
+                                                        this.chxFastRunningReport.Checked,
+                                                        this.chxAccountsReport.Checked,
+                                                        this.chxProfitAndSale.Checked,
+                                                        this.chxEmployeeReport.Checked,
+                                                        this.chxStockReport.Checked,
+                                                        this.chxDailyReport.Checked);
             }
 
             
@@ -50,13 +82,28 @@ namespace POSAdminPanel
                                                         this.chxPrintBarcode.Checked,
                                                         this.chxCreateBill.Checked,
                                                         this.chxRefundBill.Checked,
-                                                        this.chxSearchItems.Checked);
+                                                        this.chxSearchItems.Checked,
+                                                        this.chxViewInvExpenses.Checked,
+                                                        this.chxUpdateInvExpenses.Checked,
+                                                        this.chxViewPosExpenses.Checked,
+                                                        this.chxUpdatePosExpenses.Checked,
+                                                        this.chxFastRunningReport.Checked,
+                                                        this.chxAccountsReport.Checked,
+                                                        this.chxProfitAndSale.Checked,
+                                                        this.chxEmployeeReport.Checked,
+                                                        this.chxStockReport.Checked,
+                                                        this.chxDailyReport.Checked);
             this.Close();
         }
 
         private void chxAdmin_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.chxAdmin.Checked)
+            UpdateCheckBoxesState(this.chxAdmin.Checked);
+        }
+
+        private void UpdateCheckBoxesState(bool IsAdmin)
+        {
+            if (IsAdmin)
             {
                 this.chxViewItems.Enabled = false;
                 this.chxUpdateItems.Enabled = false;
@@ -66,6 +113,16 @@ namespace POSAdminPanel
                 this.chxCreateBill.Enabled = false;
                 this.chxRefundBill.Enabled = false;
                 this.chxSearchItems.Enabled = false;
+                this.chxViewInvExpenses.Enabled = false;
+                this.chxUpdateInvExpenses.Enabled = false;
+                this.chxViewPosExpenses.Enabled = false;
+                this.chxUpdatePosExpenses.Enabled = false;
+                this.chxFastRunningReport.Enabled = false;
+                this.chxAccountsReport.Enabled = false;
+                this.chxProfitAndSale.Enabled = false;
+                this.chxEmployeeReport.Enabled = false;
+                this.chxStockReport.Enabled = false;
+                this.chxDailyReport.Enabled = false;
             }
             else
             {
@@ -77,9 +134,17 @@ namespace POSAdminPanel
                 this.chxCreateBill.Enabled = true;
                 this.chxRefundBill.Enabled = true;
                 this.chxSearchItems.Enabled = true;
+                this.chxViewInvExpenses.Enabled = true;
+                this.chxUpdateInvExpenses.Enabled = true;
+                this.chxViewPosExpenses.Enabled = true;
+                this.chxUpdatePosExpenses.Enabled = true;
+                this.chxFastRunningReport.Enabled = true;
+                this.chxAccountsReport.Enabled = true;
+                this.chxProfitAndSale.Enabled = true;
+                this.chxEmployeeReport.Enabled = true;
+                this.chxStockReport.Enabled = true;
+                this.chxDailyReport.Enabled = true;
             }
-            
-
         }
 
         private void chxUpdateItems_CheckedChanged(object sender, EventArgs e)
@@ -115,5 +180,21 @@ namespace POSAdminPanel
         }
 
         public string Roles { get; set; }
+
+        private void chxUpdateInvExpenses_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.chxUpdateInvExpenses.Checked)
+            {
+                this.chxViewInvExpenses.Checked = true;
+            }
+        }
+
+        private void chxUpdatePosExpenses_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.chxUpdatePosExpenses.Checked)
+            {
+                this.chxViewPosExpenses.Checked = true;
+            }
+        }
     }
 }

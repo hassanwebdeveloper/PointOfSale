@@ -40,6 +40,8 @@ namespace POSRepository
 
         public DbSet<POSAttendanceInfo> POSAttendanceInfo { get; set; }
 
+        public DbSet<POSExpenseInfo> POSExpenses { get; set; }
+
         //internal DbSet<RepresentativeInfo> Representatives { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

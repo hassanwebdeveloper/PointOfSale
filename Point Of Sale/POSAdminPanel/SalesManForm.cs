@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace POSAdminPanel
 
             this.mSalesMan = salesMan;
 
+            this.nudCommision.Maximum = salesMan.Commisioned && salesMan.InPercent ? 100 : Decimal.MaxValue;
+            this.nudSalary.Maximum = Decimal.MaxValue;
+
             this.tbxName.Text = salesMan.Name;
             this.tbxLastName.Text = salesMan.LastName;
             this.tbxName.Text = salesMan.Name;
@@ -43,10 +47,9 @@ namespace POSAdminPanel
             this.chxInPercent.Checked = salesMan.InPercent;
             this.nudCommision.Value = salesMan.Commision;
 
-            this.nudCommision.Maximum = salesMan.Commisioned && salesMan.InPercent ? 100 : Decimal.MaxValue;
-            this.nudSalary.Maximum = Decimal.MaxValue;
+            
 
-            this.btnAddSalesMan.Text = "Update";
+            this.btnAddSalesMan.Text = "&Update";
         }
 
         private void btnAddSalesMan_Click(object sender, EventArgs e)
@@ -83,6 +86,9 @@ namespace POSAdminPanel
 
                     string errorMsg = string.Empty;
                     POSStatusCodes status = POSStatusCodes.Failed;
+                    Cursor currentCursor = Cursor.Current;
+                    Cursor.Current = Cursors.WaitCursor;
+                    
 
                     if (this.mSalesMan == null)
                     {
@@ -91,7 +97,9 @@ namespace POSAdminPanel
                     else
                     {
                         status = POSDbUtility.UpdatePOSSalesMan(salesMan, ref errorMsg);
-                    }                    
+                    }
+
+                    Cursor.Current = currentCursor;
 
                     if (status == POSStatusCodes.Success)
                     {
@@ -99,7 +107,7 @@ namespace POSAdminPanel
                         {
                             this.mSalesMan = salesMan;
                             this.btnPrintCard.Enabled = true;
-                            this.btnAddSalesMan.Text = "Update";
+                            this.btnAddSalesMan.Text = "&Update";
                         }
                         else
                         {
@@ -161,11 +169,21 @@ namespace POSAdminPanel
             int y = 5;
             int width = 220;
 
-            SystemSettings systemSettings = POSDbUtility.GetAllSystemSettings().FirstOrDefault();
+            List<SystemSettings> settings = POSDbUtility.GetAllSystemSettings();
+
+            SystemSettings systemSettings = null;
+
+            if (settings != null && settings.Count > 0)
+            {
+                systemSettings = settings.FirstOrDefault();
+            }
 
             e.Graphics.DrawRectangle(new Pen(Color.DarkBlue, 2), new Rectangle(x, y, width, 300));
 
-            POSComonUtility.DrawShopInfo(e.Graphics, systemSettings.ShopName, systemSettings.ShopAddress, systemSettings.ShopContact, ref y, Brushes.DarkBlue, Brushes.DarkBlue, Brushes.DarkBlue, fillBackGround:false, nameFontFamily: "Monotype Corsiva",addressFontFamily: "Monotype Corsiva", contactFontFamily: "Monotype Corsiva", pixX:x, width: width, fontSize:12, fontHeight: 13);
+            if (systemSettings != null)
+            {
+                POSComonUtility.DrawShopInfo(e.Graphics, systemSettings.ShopName, systemSettings.ShopAddress, systemSettings.ShopContact, ref y, Brushes.DarkBlue, Brushes.DarkBlue, Brushes.DarkBlue, fillBackGround: false, nameFontFamily: "Monotype Corsiva", addressFontFamily: "Monotype Corsiva", contactFontFamily: "Monotype Corsiva", pixX: x, width: width, fontSize: 12, fontHeight: 22, addLogo: false);
+            }           
 
             POSComonUtility.DrawSalesManInfo(e.Graphics, this.mSalesMan.Name + " " + this.mSalesMan.LastName, ref y, x);
 
@@ -180,7 +198,9 @@ namespace POSAdminPanel
             }
             else
             {
-                this.printDocument1.PrinterSettings.PrinterName = "HP LaserJet 1020";
+                string salesManCardPrinterName = ConfigurationManager.AppSettings["SalesManCardPrinter"];
+
+                this.printDocument1.PrinterSettings.PrinterName = salesManCardPrinterName;
                 this.printDocument1.Print();
             }
             

@@ -63,10 +63,14 @@ namespace POSAdminPanel
 
         private void btnAddAppUser_Click(object sender, EventArgs e)
         {
-            bool isValidTbxInputs = POSComonUtility.ValidateInputs(new List<TextBox>() { this.tbxName, this.tbxLastName, this.tbxContactNumber, this.tbxAddress });
+            bool isValidTbxInputs = POSComonUtility.ValidateInputs(new List<TextBox>() { this.tbxName, this.tbxLastName, this.tbxContactNumber, this.tbxAddress, this.tbxRoles });
 
             if (isValidTbxInputs)
             {
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+               
+
                 POSStatusCodes status = POSStatusCodes.Aborted;
 
                 string name = this.tbxName.Text;
@@ -83,9 +87,26 @@ namespace POSAdminPanel
 
                 if (this.mAppUser == null)
                 {
-                    POSAppUser appUser = POSFactory.CreateOrUpdatePOSAppUser(null, name, lastName, contactNumber, address, role, password, customData);
+                    isValidTbxInputs = POSComonUtility.ValidateInputs(new List<TextBox>() { this.tbxPassword });
 
-                    status = POSDbUtility.AddPOSAppUser(appUser, ref errorMsg, true);
+                    if (isValidTbxInputs)
+                    {
+                        if (string.IsNullOrEmpty(password) || password.Length < 8)
+                        {
+                            errorMsg = "Password should contains atleast 8 characters.";
+                        }
+                        else
+                        {
+                            POSAppUser appUser = POSFactory.CreateOrUpdatePOSAppUser(null, name, lastName, contactNumber, address, role, password, customData);
+
+                            status = POSDbUtility.AddPOSAppUser(appUser, ref errorMsg, true);
+                        }                        
+                    }
+                    else
+                    {
+                        Cursor.Current = currentCursor;
+                        return;
+                    }
                 }
                 else
                 {
@@ -141,9 +162,9 @@ namespace POSAdminPanel
                     }
 
                 }
-                
 
 
+                Cursor.Current = currentCursor;
 
                 if (status == POSStatusCodes.Failed)
                 {
@@ -162,7 +183,7 @@ namespace POSAdminPanel
 
         private void llSetRoles_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SetApplicationUserRolesForm form = new SetApplicationUserRolesForm(this.mAppUser);
+            SetApplicationUserRoles form = new SetApplicationUserRoles(this.mAppUser);
 
             form.ShowDialog(this);
 

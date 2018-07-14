@@ -58,16 +58,41 @@ namespace POSRepository
 
         public virtual List<POSBillItemInfo> BillItems { get; set; }
 
+        public string CustomData { get; set; }
+        
+        public int GetRemaningQuantity(int orderQuantity = 0)
+        {
+            int quantity = 0;
+
+            quantity = this.TotalItemsPurchased - this.TotalItemsSold - orderQuantity;
+
+            return quantity;
+        }
+
         [NotMapped]
-        public int RemaningQuantity
+        public int RemainingQuantity
         {
             get
             {
-                int quantity = 0;
+                return this.GetRemaningQuantity();
+            }
+        }
 
-                quantity = this.TotalItemsPurchased - this.TotalItemsSold - this.OrderQuantity;
+        [NotMapped]
+        public int RemainingStockAmmount
+        {
+            get
+            {
+                return this.GetRemaningQuantity() * this.BuyingPrice;
+            }
+        }
 
-                return quantity;
+        [NotMapped]
+        public int TotalStockAmmount
+        {
+            get
+            {
+                return this.TotalItemsPurchased * this.BuyingPrice;
             }
         }
 
@@ -155,10 +180,7 @@ namespace POSRepository
                 return img;
             }
         }
-
-        [NotMapped]
-        public int OrderQuantity { get; set; }
-
+        
         [NotMapped]
         public int DiscountPrice
         {
@@ -203,26 +225,23 @@ namespace POSRepository
             
         }
 
-        [NotMapped]
-        public int OrderTotal
+
+        public int GetOrderTotal(int orderQuantity)
         {
-            get
+            int total = 0;
+
+            int discount = this.Discount;
+
+            if (this.DiscountInPercent)
             {
-                int total = 0;
-
-                int discount = this.Discount;
-
-                if (this.DiscountInPercent)
-                {
-                    discount = (discount / 100) * this.SellingPrice;
-                }
-
-                int sellingPrice = this.SellingPrice - discount;
-
-                total = sellingPrice * this.OrderQuantity;
-
-                return total;
+                discount = (discount / 100) * this.SellingPrice;
             }
+
+            int sellingPrice = this.SellingPrice - discount;
+
+            total = sellingPrice * orderQuantity;
+
+            return total;
         }
 
         [NotMapped]

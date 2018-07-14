@@ -20,5 +20,7 @@ namespace POSRepository
         public string ShortName { get; set; }
 
         public virtual List<POSItemInfo> Items { get; set; }
+
+        public string CustomData { get; set; }
     }
 }

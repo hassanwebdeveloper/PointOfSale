@@ -14,8 +14,12 @@ namespace InventoryManagementSystem
     public partial class ManageVendorsForm : Form
     {
         private List<VendorInfo> mVendors = null;
+
         public ManageVendorsForm()
         {
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            
             InitializeComponent();
 
             if (!LoginForm.mLoggedInUser.IsAdmin)
@@ -28,10 +32,25 @@ namespace InventoryManagementSystem
                 }
             }
 
-            this.mVendors = POSDbUtility.GetAllVendors();
+            try
+            {
+                this.mVendors = POSDbUtility.GetAllVendors();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching vendors.\n\n" + errorMsg);
+            }
+
+            if (this.mVendors == null)
+            {
+                this.mVendors = new List<VendorInfo>();
+            }
 
             this.vendorInfoBindingSource.DataSource = this.mVendors;
 
+            Cursor.Current = currentCursor;
         }
 
         private void btnVendorSearch_Click(object sender, EventArgs e)
@@ -107,7 +126,7 @@ namespace InventoryManagementSystem
 
                 this.ShowVendors();
             }
-            
+
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -121,17 +140,46 @@ namespace InventoryManagementSystem
 
                     VendorInfo vendor = this.dataGridView1.SelectedRows[0].Tag as VendorInfo;
 
-                    POSStatusCodes status = POSDbUtility.DeleteVendor(vendor, ref errorMsg, true);
+                    if (vendor == null || vendor.Items == null)
+                    {
+                        MessageBox.Show(this, "Some error occurred, please close window and retry.");
+                        return;
+                    }
 
-                    if (status == POSStatusCodes.Success)
+                    bool billCreated = (from item in vendor.Items
+                                        where item != null && item.BillItems != null && item.BillItems.Count > 0
+                                        select item).Any();
+
+                    if (billCreated)
                     {
-                        this.mVendors.Remove(vendor);
-                        this.ShowVendors();
+                        MessageBox.Show(this, "Some items from this vendor are sold, so this vendor can not be deleted.");
+                        return;
                     }
-                    else
+
+                    DialogResult result = MessageBox.Show(this, "Are you sure you want to delete this vendor?", "Confirmation", MessageBoxButtons.YesNo);
+
+                    if (result == DialogResult.Yes)
                     {
-                        MessageBox.Show(this, "Some error occured in deleting vendor.\n\n" + errorMsg);
+                        Cursor currentCursor = Cursor.Current;
+                        Cursor.Current = Cursors.WaitCursor;
+                        
+                        POSStatusCodes status = POSDbUtility.DeleteVendor(vendor, ref errorMsg, true);
+
+                        Cursor.Current = currentCursor;
+
+                        if (status == POSStatusCodes.Success)
+                        {
+                            this.mVendors.Remove(vendor);
+                            this.ShowVendors();
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "Some error occured in deleting vendor.\n\n" + errorMsg);
+                        }
+
+                        
                     }
+
                 }
                 else
                 {
@@ -146,7 +194,7 @@ namespace InventoryManagementSystem
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (this.dataGridView1.SelectedRows.Count > 0)
+            if (this.dataGridView1.SelectedRows != null && this.dataGridView1.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = this.dataGridView1.SelectedRows[0];
 
@@ -162,12 +210,9 @@ namespace InventoryManagementSystem
 
                     if (updatedVendor != null)
                     {
-                        //VendorInfo vend = this.mVendors.Find(vendorInfo => vendorInfo.VendorId == updatedVendor.VendorId);
-                        //vend = updatedVendor;
-
                         this.ShowVendors();
-                    }                  
-                    
+                    }
+
                 }
                 else
                 {

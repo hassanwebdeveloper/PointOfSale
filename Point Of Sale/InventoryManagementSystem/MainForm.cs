@@ -34,6 +34,11 @@ namespace InventoryManagementSystem
                 {
                     this.btnPrintBarcode.Enabled = false;
                 }
+
+                if (!LoginForm.mLoggedInUser.ViewInvExpense)
+                {
+                    this.btnManageExpense.Enabled = false;
+                }
             }
         }
 
@@ -61,6 +66,13 @@ namespace InventoryManagementSystem
             PrintBarcodeForm printBarcodeForm = new PrintBarcodeForm();
 
             printBarcodeForm.ShowDialog(this);
+        }
+
+        private void btnManageExpense_Click(object sender, EventArgs e)
+        {
+            ManageExpenseForm manageExpenseForm = new ManageExpenseForm();
+
+            manageExpenseForm.ShowDialog(this);
         }
     }
 }

@@ -74,9 +74,11 @@
             this.dgvCategories.Name = "dgvCategories";
             this.dgvCategories.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCategories.Size = new System.Drawing.Size(334, 319);
+            this.dgvCategories.RowTemplate.Height = 25;
             this.dgvCategories.TabIndex = 6;
             this.dgvCategories.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCadres_CellEndEdit);
             this.dgvCategories.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvCadres_DataBindingComplete);
+            this.dgvCategories.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvCategories_EditingControlShowing);
             this.dgvCategories.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dgvCadres_UserDeletingRow);
             // 
             // idDataGridViewTextBoxColumn

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tbxDescription = new System.Windows.Forms.TextBox();
             this.tbxShortName = new System.Windows.Forms.TextBox();
@@ -83,6 +83,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label11 = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.btnPurchase = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDiscount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudItemsCount)).BeginInit();
@@ -96,6 +97,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnPurchase);
             this.groupBox1.Controls.Add(this.tbxDescription);
             this.groupBox1.Controls.Add(this.tbxShortName);
             this.groupBox1.Controls.Add(this.tbxItemName);
@@ -144,6 +146,7 @@
             this.tbxShortName.Name = "tbxShortName";
             this.tbxShortName.Size = new System.Drawing.Size(352, 29);
             this.tbxShortName.TabIndex = 2;
+            this.tbxShortName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxShortName_KeyPress);
             // 
             // tbxItemName
             // 
@@ -161,7 +164,7 @@
             this.btnAddItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddItem.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddItem.ForeColor = System.Drawing.Color.Navy;
-            this.btnAddItem.Location = new System.Drawing.Point(1067, 232);
+            this.btnAddItem.Location = new System.Drawing.Point(1083, 239);
             this.btnAddItem.Name = "btnAddItem";
             this.btnAddItem.Size = new System.Drawing.Size(110, 40);
             this.btnAddItem.TabIndex = 15;
@@ -302,6 +305,7 @@
             // 
             // cbxVendor
             // 
+            this.cbxVendor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxVendor.FormattingEnabled = true;
             this.cbxVendor.Location = new System.Drawing.Point(627, 25);
             this.cbxVendor.Name = "cbxVendor";
@@ -331,6 +335,7 @@
             // 
             // cbxItemType
             // 
+            this.cbxItemType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxItemType.FormattingEnabled = true;
             this.cbxItemType.Location = new System.Drawing.Point(627, 200);
             this.cbxItemType.Name = "cbxItemType";
@@ -360,6 +365,7 @@
             // 
             // cbxItemCategory
             // 
+            this.cbxItemCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxItemCategory.FormattingEnabled = true;
             this.cbxItemCategory.Location = new System.Drawing.Point(101, 200);
             this.cbxItemCategory.Name = "cbxItemCategory";
@@ -412,14 +418,14 @@
             this.dgvPOSItems.AllowUserToDeleteRows = false;
             this.dgvPOSItems.AutoGenerateColumns = false;
             this.dgvPOSItems.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Navy;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Navy;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPOSItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Navy;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Navy;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPOSItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvPOSItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPOSItems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.barcodeDataGridViewTextBoxColumn,
@@ -437,26 +443,26 @@
             this.totalItemsPurchasedDataGridViewTextBoxColumn,
             this.totalItemsSoldDataGridViewTextBoxColumn});
             this.dgvPOSItems.DataSource = this.bsPOSItemInfo;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Navy;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Navy;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPOSItems.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Navy;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Navy;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPOSItems.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgvPOSItems.Location = new System.Drawing.Point(8, 348);
             this.dgvPOSItems.MultiSelect = false;
             this.dgvPOSItems.Name = "dgvPOSItems";
             this.dgvPOSItems.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPOSItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPOSItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvPOSItems.RowHeadersVisible = false;
             this.dgvPOSItems.RowTemplate.Height = 50;
             this.dgvPOSItems.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -672,6 +678,24 @@
             this.panel7.Size = new System.Drawing.Size(1222, 53);
             this.panel7.TabIndex = 37;
             // 
+            // btnPurchase
+            // 
+            this.btnPurchase.BackColor = System.Drawing.Color.White;
+            this.btnPurchase.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
+            this.btnPurchase.FlatAppearance.BorderSize = 2;
+            this.btnPurchase.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnPurchase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPurchase.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPurchase.ForeColor = System.Drawing.Color.Navy;
+            this.btnPurchase.Location = new System.Drawing.Point(967, 239);
+            this.btnPurchase.Name = "btnPurchase";
+            this.btnPurchase.Size = new System.Drawing.Size(110, 40);
+            this.btnPurchase.TabIndex = 32;
+            this.btnPurchase.Text = "&Purchase";
+            this.btnPurchase.UseVisualStyleBackColor = false;
+            this.btnPurchase.Visible = false;
+            this.btnPurchase.Click += new System.EventHandler(this.btnPurchase_Click);
+            // 
             // POSItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -755,5 +779,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn discountInPercentDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalItemsPurchasedDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalItemsSoldDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button btnPurchase;
     }
 }

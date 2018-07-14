@@ -52,8 +52,8 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.btnPrintCard = new System.Windows.Forms.Button();
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCommision)).BeginInit();
@@ -76,7 +76,7 @@
             this.btnAddSalesMan.Name = "btnAddSalesMan";
             this.btnAddSalesMan.Size = new System.Drawing.Size(137, 41);
             this.btnAddSalesMan.TabIndex = 23;
-            this.btnAddSalesMan.Text = "Add";
+            this.btnAddSalesMan.Text = "&Add";
             this.btnAddSalesMan.UseVisualStyleBackColor = false;
             this.btnAddSalesMan.Click += new System.EventHandler(this.btnAddSalesMan_Click);
             // 
@@ -326,10 +326,6 @@
             this.panel6.Size = new System.Drawing.Size(615, 64);
             this.panel6.TabIndex = 38;
             // 
-            // printDocument1
-            // 
-            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
-            // 
             // btnPrintCard
             // 
             this.btnPrintCard.BackColor = System.Drawing.Color.White;
@@ -344,9 +340,13 @@
             this.btnPrintCard.Name = "btnPrintCard";
             this.btnPrintCard.Size = new System.Drawing.Size(137, 41);
             this.btnPrintCard.TabIndex = 24;
-            this.btnPrintCard.Text = "Print Card";
+            this.btnPrintCard.Text = "&Print Card";
             this.btnPrintCard.UseVisualStyleBackColor = false;
             this.btnPrintCard.Click += new System.EventHandler(this.btnPrintCard_Click);
+            // 
+            // printDocument1
+            // 
+            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
             // 
             // SalesManForm
             // 

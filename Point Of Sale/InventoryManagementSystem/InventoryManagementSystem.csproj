@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -77,6 +78,12 @@
     <Compile Include="ManageInventoryForm.Designer.cs">
       <DependentUpon>ManageInventoryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ManageExpenseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageExpenseForm.Designer.cs">
+      <DependentUpon>ManageExpenseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ManageVendorsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +104,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseExistingPOSItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PurchaseExistingPOSItem.Designer.cs">
+      <DependentUpon>PurchaseExistingPOSItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="RepresentativeInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +141,12 @@
     <Compile Include="UpdateItemTypeForm.Designer.cs">
       <DependentUpon>UpdateItemTypeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExpenseInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExpenseInfoForm.Designer.cs">
+      <DependentUpon>ExpenseInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="VendorInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -142,6 +161,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ManageInventoryForm.resx">
       <DependentUpon>ManageInventoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageExpenseForm.resx">
+      <DependentUpon>ManageExpenseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManageVendorsForm.resx">
       <DependentUpon>ManageVendorsForm.cs</DependentUpon>
@@ -161,6 +183,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="PurchaseExistingPOSItem.resx">
+      <DependentUpon>PurchaseExistingPOSItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RepresentativeInfoForm.resx">
       <DependentUpon>RepresentativeInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -176,12 +201,16 @@
     <EmbeddedResource Include="UpdateItemTypeForm.resx">
       <DependentUpon>UpdateItemTypeForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExpenseInfoForm.resx">
+      <DependentUpon>ExpenseInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VendorInfoForm.resx">
       <DependentUpon>VendorInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\POSRepository.POSDb.RepresentativeInfo.datasource" />
     <None Include="Properties\DataSources\POSRepository.POSDb.VendorInfo.datasource" />
+    <None Include="Properties\DataSources\POSRepository.POSExpenseInfo.datasource" />
     <None Include="Properties\DataSources\POSRepository.POSItemCategory.datasource" />
     <None Include="Properties\DataSources\POSRepository.POSItemInfo.datasource" />
     <None Include="Properties\DataSources\POSRepository.POSItemType.datasource" />

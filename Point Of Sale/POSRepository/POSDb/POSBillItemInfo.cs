@@ -33,6 +33,8 @@ namespace POSRepository
         
         public List<POSRefundItemInfo> RefundItemInfos { get; set; }
 
+        public string CustomData { get; set; }
+
         [NotMapped]
         public int Total
         {

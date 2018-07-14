@@ -28,24 +28,60 @@ namespace Point_Of_Sale
 
         private void btnCheckIn_Click(object sender, EventArgs e)
         {
-            POSAttendanceInfo attendanceInfo = POSFactory.CreateOrUpdatePOSAttendanceInfo(null, true, this.mDateTime, DateTime.MaxValue, this.mSalesMan);
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
 
-            string errorMsg = "";
+            POSAttendanceInfo attendanceInfo = (from attendance in this.mSalesMan.Attendance
+                                                where attendance != null && attendance.OnDuty && attendance.InTime.Date == this.mDateTime.Date
+                                                select attendance).LastOrDefault();
 
-            POSStatusCodes status = POSDbUtility.AddPOSAttendanceInfo(attendanceInfo, ref errorMsg, true);
-           
-            if (status == POSStatusCodes.Failed)
+            
+
+            if (attendanceInfo == null)
             {
-                MessageBox.Show(this, "Some error occured in marking attendance.\n\n" + errorMsg);
+                attendanceInfo = POSFactory.CreateOrUpdatePOSAttendanceInfo(null, true, this.mDateTime, DateTime.MaxValue, this.mSalesMan);
+                if (attendanceInfo == null)
+                {
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(this, "Some error occured in creating attendance object (Sales man not found).");
+                }
+                else
+                {
+                    string errorMsg = "";
+
+                    POSStatusCodes status = POSDbUtility.AddPOSAttendanceInfo(attendanceInfo, ref errorMsg, true);
+
+                    if (status == POSStatusCodes.Failed)
+                    {
+                        Cursor.Current = currentCursor;
+                        MessageBox.Show(this, "Some error occured in marking attendance.\n\n" + errorMsg);
+                    }
+                    else if (status == POSStatusCodes.Aborted)
+                    {
+                        Cursor.Current = currentCursor;
+                        MessageBox.Show(this, errorMsg);
+                    }
+
+                    Cursor.Current = currentCursor;
+
+                    this.Close();
+                }
             }
-            else if (status == POSStatusCodes.Aborted)
-            {
-                MessageBox.Show(this, errorMsg);
-            }
+            else
+            {                
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Attendance of " + this.mSalesMan.Name + "is already marked");
+            }            
         }
 
         private void btnCheckOut_Click(object sender, EventArgs e)
         {
+            if (this.mSalesMan == null)
+            {
+                MessageBox.Show(this, "Unable to find sales man.");
+                return;
+            }
+
             POSAttendanceInfo attendanceInfo = (from attendance in this.mSalesMan.Attendance
                                                 where attendance != null && attendance.OnDuty && attendance.InTime.Date == this.mDateTime.Date
                                                 select attendance).LastOrDefault();
@@ -56,6 +92,9 @@ namespace Point_Of_Sale
             }
             else
             {
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+                
                 attendanceInfo = POSFactory.CreateOrUpdatePOSAttendanceInfo(attendanceInfo, false, attendanceInfo.InTime, this.mDateTime, this.mSalesMan);
 
                 string errorMsg = "";
@@ -64,12 +103,17 @@ namespace Point_Of_Sale
 
                 if (status == POSStatusCodes.Failed)
                 {
+                    Cursor.Current = currentCursor;
                     MessageBox.Show(this, "Some error occured in marking attendance.\n\n" + errorMsg);
                 }
                 else if (status == POSStatusCodes.Aborted)
                 {
+                    Cursor.Current = currentCursor;
                     MessageBox.Show(this, errorMsg);
                 }
+
+                Cursor.Current = currentCursor;
+                this.Close();
             }
         }
     }

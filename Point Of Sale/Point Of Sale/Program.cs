@@ -29,10 +29,11 @@ namespace Point_Of_Sale
                     splash.Invoke(new Action(() => { splash.Close(); }));
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
 
-                    throw;
+                    MessageBox.Show("Some error occurred in initializing database./n/n" + errorMsg);
                 }
             });
 

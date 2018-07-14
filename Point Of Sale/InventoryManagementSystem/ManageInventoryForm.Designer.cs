@@ -37,6 +37,13 @@
             this.btnItemSearch = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.dgvPOSItems = new System.Windows.Forms.DataGridView();
+            this.btnAddExisting = new System.Windows.Forms.Button();
+            this.btnAddNewItems = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.bsPOSItemInfo = new System.Windows.Forms.BindingSource(this.components);
             this.barcodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.shortNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -49,20 +56,15 @@
             this.sellingPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.discountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.discountInPercentDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Profit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.totalItemsPurchasedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.totalItemsSoldDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bsPOSItemInfo = new System.Windows.Forms.BindingSource(this.components);
-            this.btnAddExisting = new System.Windows.Forms.Button();
-            this.btnAddNewItems = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
+            this.RemainingQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPOSItems)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsPOSItemInfo)).BeginInit();
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bsPOSItemInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -75,7 +77,7 @@
             this.groupBox1.ForeColor = System.Drawing.Color.Navy;
             this.groupBox1.Location = new System.Drawing.Point(12, 57);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1338, 69);
+            this.groupBox1.Size = new System.Drawing.Size(1300, 69);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Search Item";
@@ -96,7 +98,7 @@
             this.btnShowAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnShowAll.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnShowAll.ForeColor = System.Drawing.Color.Navy;
-            this.btnShowAll.Location = new System.Drawing.Point(1241, 18);
+            this.btnShowAll.Location = new System.Drawing.Point(1203, 18);
             this.btnShowAll.Name = "btnShowAll";
             this.btnShowAll.Size = new System.Drawing.Size(91, 41);
             this.btnShowAll.TabIndex = 3;
@@ -113,7 +115,7 @@
             this.btnItemSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnItemSearch.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnItemSearch.ForeColor = System.Drawing.Color.Navy;
-            this.btnItemSearch.Location = new System.Drawing.Point(1144, 18);
+            this.btnItemSearch.Location = new System.Drawing.Point(1106, 18);
             this.btnItemSearch.Name = "btnItemSearch";
             this.btnItemSearch.Size = new System.Drawing.Size(91, 41);
             this.btnItemSearch.TabIndex = 2;
@@ -159,8 +161,10 @@
             this.sellingPriceDataGridViewTextBoxColumn,
             this.discountDataGridViewTextBoxColumn,
             this.discountInPercentDataGridViewCheckBoxColumn,
+            this.Profit,
             this.totalItemsPurchasedDataGridViewTextBoxColumn,
-            this.totalItemsSoldDataGridViewTextBoxColumn});
+            this.totalItemsSoldDataGridViewTextBoxColumn,
+            this.RemainingQuantity});
             this.dgvPOSItems.DataSource = this.bsPOSItemInfo;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
@@ -179,9 +183,95 @@
             this.dgvPOSItems.RowTemplate.Height = 50;
             this.dgvPOSItems.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvPOSItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvPOSItems.Size = new System.Drawing.Size(1338, 356);
+            this.dgvPOSItems.Size = new System.Drawing.Size(1300, 356);
             this.dgvPOSItems.TabIndex = 9;
             this.dgvPOSItems.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvPOSItems_DataBindingComplete);
+            // 
+            // btnAddExisting
+            // 
+            this.btnAddExisting.BackColor = System.Drawing.Color.White;
+            this.btnAddExisting.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
+            this.btnAddExisting.FlatAppearance.BorderSize = 2;
+            this.btnAddExisting.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnAddExisting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddExisting.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddExisting.ForeColor = System.Drawing.Color.Navy;
+            this.btnAddExisting.Location = new System.Drawing.Point(1095, 10);
+            this.btnAddExisting.Name = "btnAddExisting";
+            this.btnAddExisting.Size = new System.Drawing.Size(106, 41);
+            this.btnAddExisting.TabIndex = 5;
+            this.btnAddExisting.Text = "&Update";
+            this.btnAddExisting.UseVisualStyleBackColor = false;
+            this.btnAddExisting.Click += new System.EventHandler(this.btnAddExisting_Click);
+            // 
+            // btnAddNewItems
+            // 
+            this.btnAddNewItems.BackColor = System.Drawing.Color.White;
+            this.btnAddNewItems.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
+            this.btnAddNewItems.FlatAppearance.BorderSize = 2;
+            this.btnAddNewItems.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnAddNewItems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddNewItems.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddNewItems.ForeColor = System.Drawing.Color.Navy;
+            this.btnAddNewItems.Location = new System.Drawing.Point(1207, 10);
+            this.btnAddNewItems.Name = "btnAddNewItems";
+            this.btnAddNewItems.Size = new System.Drawing.Size(106, 41);
+            this.btnAddNewItems.TabIndex = 4;
+            this.btnAddNewItems.Text = "&New";
+            this.btnAddNewItems.UseVisualStyleBackColor = false;
+            this.btnAddNewItems.Click += new System.EventHandler(this.btnAddNewItems_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.BackColor = System.Drawing.Color.White;
+            this.btnDelete.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
+            this.btnDelete.FlatAppearance.BorderSize = 2;
+            this.btnDelete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDelete.ForeColor = System.Drawing.Color.Navy;
+            this.btnDelete.Location = new System.Drawing.Point(983, 9);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(106, 41);
+            this.btnDelete.TabIndex = 6;
+            this.btnDelete.Text = "&Delete";
+            this.btnDelete.UseVisualStyleBackColor = false;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.panel6.Controls.Add(this.btnAddNewItems);
+            this.panel6.Controls.Add(this.btnDelete);
+            this.panel6.Controls.Add(this.btnAddExisting);
+            this.panel6.Location = new System.Drawing.Point(-1, 512);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(1323, 64);
+            this.panel6.TabIndex = 29;
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Location = new System.Drawing.Point(-1, -2);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(1361, 53);
+            this.panel7.TabIndex = 30;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Monotype Corsiva", 26.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.White;
+            this.label7.Location = new System.Drawing.Point(38, 5);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(149, 43);
+            this.label7.TabIndex = 34;
+            this.label7.Text = "Inventory";
+            // 
+            // bsPOSItemInfo
+            // 
+            this.bsPOSItemInfo.DataSource = typeof(POSRepository.POSItemInfo);
             // 
             // barcodeDataGridViewTextBoxColumn
             // 
@@ -205,7 +295,7 @@
             this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
             this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
             this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.nameDataGridViewTextBoxColumn.Width = 210;
+            this.nameDataGridViewTextBoxColumn.Width = 170;
             // 
             // descriptionDataGridViewTextBoxColumn
             // 
@@ -213,7 +303,7 @@
             this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
             this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
-            this.descriptionDataGridViewTextBoxColumn.Width = 200;
+            this.descriptionDataGridViewTextBoxColumn.Width = 150;
             // 
             // imageDataGridViewImageColumn
             // 
@@ -230,7 +320,6 @@
             this.VendorName.HeaderText = "Vendor";
             this.VendorName.Name = "VendorName";
             this.VendorName.ReadOnly = true;
-            this.VendorName.Width = 120;
             // 
             // TypeName
             // 
@@ -238,6 +327,7 @@
             this.TypeName.HeaderText = "Type";
             this.TypeName.Name = "TypeName";
             this.TypeName.ReadOnly = true;
+            this.TypeName.Width = 80;
             // 
             // CategoryName
             // 
@@ -245,6 +335,7 @@
             this.CategoryName.HeaderText = "Category";
             this.CategoryName.Name = "CategoryName";
             this.CategoryName.ReadOnly = true;
+            this.CategoryName.Width = 80;
             // 
             // buyingPriceDataGridViewTextBoxColumn
             // 
@@ -278,6 +369,14 @@
             this.discountInPercentDataGridViewCheckBoxColumn.ReadOnly = true;
             this.discountInPercentDataGridViewCheckBoxColumn.Width = 25;
             // 
+            // Profit
+            // 
+            this.Profit.DataPropertyName = "Profit";
+            this.Profit.HeaderText = "Profit";
+            this.Profit.Name = "Profit";
+            this.Profit.ReadOnly = true;
+            this.Profit.Width = 70;
+            // 
             // totalItemsPurchasedDataGridViewTextBoxColumn
             // 
             this.totalItemsPurchasedDataGridViewTextBoxColumn.DataPropertyName = "TotalItemsPurchased";
@@ -294,98 +393,20 @@
             this.totalItemsSoldDataGridViewTextBoxColumn.ReadOnly = true;
             this.totalItemsSoldDataGridViewTextBoxColumn.Width = 50;
             // 
-            // bsPOSItemInfo
+            // RemainingQuantity
             // 
-            this.bsPOSItemInfo.DataSource = typeof(POSRepository.POSItemInfo);
-            // 
-            // btnAddExisting
-            // 
-            this.btnAddExisting.BackColor = System.Drawing.Color.White;
-            this.btnAddExisting.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
-            this.btnAddExisting.FlatAppearance.BorderSize = 2;
-            this.btnAddExisting.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnAddExisting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddExisting.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddExisting.ForeColor = System.Drawing.Color.Navy;
-            this.btnAddExisting.Location = new System.Drawing.Point(1133, 10);
-            this.btnAddExisting.Name = "btnAddExisting";
-            this.btnAddExisting.Size = new System.Drawing.Size(106, 41);
-            this.btnAddExisting.TabIndex = 5;
-            this.btnAddExisting.Text = "&Update";
-            this.btnAddExisting.UseVisualStyleBackColor = false;
-            this.btnAddExisting.Click += new System.EventHandler(this.btnAddExisting_Click);
-            // 
-            // btnAddNewItems
-            // 
-            this.btnAddNewItems.BackColor = System.Drawing.Color.White;
-            this.btnAddNewItems.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
-            this.btnAddNewItems.FlatAppearance.BorderSize = 2;
-            this.btnAddNewItems.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnAddNewItems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddNewItems.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddNewItems.ForeColor = System.Drawing.Color.Navy;
-            this.btnAddNewItems.Location = new System.Drawing.Point(1245, 10);
-            this.btnAddNewItems.Name = "btnAddNewItems";
-            this.btnAddNewItems.Size = new System.Drawing.Size(106, 41);
-            this.btnAddNewItems.TabIndex = 4;
-            this.btnAddNewItems.Text = "New";
-            this.btnAddNewItems.UseVisualStyleBackColor = false;
-            this.btnAddNewItems.Click += new System.EventHandler(this.btnAddNewItems_Click);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.BackColor = System.Drawing.Color.White;
-            this.btnDelete.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
-            this.btnDelete.FlatAppearance.BorderSize = 2;
-            this.btnDelete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDelete.ForeColor = System.Drawing.Color.Navy;
-            this.btnDelete.Location = new System.Drawing.Point(1021, 10);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(106, 41);
-            this.btnDelete.TabIndex = 6;
-            this.btnDelete.Text = "&Delete";
-            this.btnDelete.UseVisualStyleBackColor = false;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // panel6
-            // 
-            this.panel6.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.panel6.Controls.Add(this.btnAddNewItems);
-            this.panel6.Controls.Add(this.btnDelete);
-            this.panel6.Controls.Add(this.btnAddExisting);
-            this.panel6.Location = new System.Drawing.Point(-1, 512);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1361, 64);
-            this.panel6.TabIndex = 29;
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.panel7.Controls.Add(this.label7);
-            this.panel7.Location = new System.Drawing.Point(-1, -2);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(1361, 53);
-            this.panel7.TabIndex = 30;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Monotype Corsiva", 26.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(38, 5);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(149, 43);
-            this.label7.TabIndex = 34;
-            this.label7.Text = "Inventory";
+            this.RemainingQuantity.DataPropertyName = "RemainingQuantity";
+            this.RemainingQuantity.HeaderText = "Remaining";
+            this.RemainingQuantity.Name = "RemainingQuantity";
+            this.RemainingQuantity.ReadOnly = true;
+            this.RemainingQuantity.Width = 70;
             // 
             // ManageInventoryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1358, 574);
+            this.ClientSize = new System.Drawing.Size(1321, 574);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.dgvPOSItems);
@@ -398,10 +419,10 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPOSItems)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsPOSItemInfo)).EndInit();
             this.panel6.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bsPOSItemInfo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -418,6 +439,9 @@
         private System.Windows.Forms.Button btnAddExisting;
         private System.Windows.Forms.Button btnAddNewItems;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.DataGridViewTextBoxColumn barcodeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn shortNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
@@ -430,10 +454,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn sellingPriceDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn discountDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn discountInPercentDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Profit;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalItemsPurchasedDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalItemsSoldDataGridViewTextBoxColumn;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RemainingQuantity;
     }
 }

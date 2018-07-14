@@ -19,7 +19,21 @@ namespace POSAdminPanel
         {
             InitializeComponent();
 
-            this.mlstSalesMans = POSDbUtility.GetAllPOSSalesMan();
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
+            {
+                this.mlstSalesMans = POSDbUtility.GetAllPOSSalesMan(-1);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching sales man.\n\n" + errorMsg);
+            }
+
+            Cursor.Current = currentCursor;
 
             this.bsPOSSalesMan.DataSource = this.mlstSalesMans;
         }
@@ -38,7 +52,21 @@ namespace POSAdminPanel
         {
             this.tbxName.Text = string.Empty;
 
-            this.mlstSalesMans = POSDbUtility.GetAllPOSSalesMan();
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
+            {
+                this.mlstSalesMans = POSDbUtility.GetAllPOSSalesMan(-1);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching sales man.\n\n" + errorMsg);
+            }
+
+            Cursor.Current = currentCursor;
 
             this.bsPOSSalesMan.DataSource = null;
             this.bsPOSSalesMan.DataSource = this.mlstSalesMans;
@@ -54,10 +82,28 @@ namespace POSAdminPanel
             }
             else
             {
-                this.mlstSalesMans = POSDbUtility.GetAllPOSSalesMan();
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
 
-                this.mlstSalesMans = this.mlstSalesMans.FindAll(salesMan => salesMan.Name.Contains(name));
+                try
+                {
+                    this.mlstSalesMans = POSDbUtility.GetAllPOSSalesMan(-1);
 
+                    if (this.mlstSalesMans != null)
+                    {
+                        this.mlstSalesMans = this.mlstSalesMans.FindAll(salesMan => salesMan.Name.Contains(name));
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(this, "Some error occured in fetching users.\n\n" + errorMsg);
+                }
+
+                Cursor.Current = currentCursor;
+                
                 this.bsPOSSalesMan.DataSource = null;
                 this.bsPOSSalesMan.DataSource = this.mlstSalesMans;
             }
@@ -131,13 +177,25 @@ namespace POSAdminPanel
                 }
                 else
                 {
+                    bool billCreated = posSalesMantoDelete.Bills != null && posSalesMantoDelete.Bills.Count > 0;
+
+                    if (billCreated)
+                    {
+                        MessageBox.Show(this, "Some bills are associated with this sales man, so this sales man can not be deleted.");
+                        return;
+                    }
+
                     DialogResult dialogResult = MessageBox.Show(this, "Are you sure you want to delete salesm man?", "Confirmation Dialog", MessageBoxButtons.YesNo);
 
                     if (dialogResult == DialogResult.Yes)
                     {
+                        Cursor currentCursor = Cursor.Current;
+                        Cursor.Current = Cursors.WaitCursor;
+                        
                         string errorMsg = string.Empty;
                         POSStatusCodes status = POSDbUtility.DeletePOSSalesMan(posSalesMantoDelete, ref errorMsg, true);
 
+                        Cursor.Current = currentCursor;
                         if (status == POSStatusCodes.Success)
                         {
                             string userName = this.tbxName.Text;
@@ -171,12 +229,16 @@ namespace POSAdminPanel
 
             List<POSSalesMan> users = this.mlstSalesMans;
 
-            for (int i = 0; i < users.Count; i++)
+            if (users != null)
             {
-                DataGridViewRow row = this.dgvSalesMan.Rows[i];
+                for (int i = 0; i < users.Count; i++)
+                {
+                    DataGridViewRow row = this.dgvSalesMan.Rows[i];
 
-                row.Tag = users[i];
+                    row.Tag = users[i];
+                }
             }
+            
         }
     }
 }

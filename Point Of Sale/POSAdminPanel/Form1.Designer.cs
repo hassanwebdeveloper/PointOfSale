@@ -64,7 +64,7 @@
             this.btnAddSalesMan.Name = "btnAddSalesMan";
             this.btnAddSalesMan.Size = new System.Drawing.Size(137, 41);
             this.btnAddSalesMan.TabIndex = 11;
-            this.btnAddSalesMan.Text = "Sales Men";
+            this.btnAddSalesMan.Text = "Sales Man";
             this.btnAddSalesMan.UseVisualStyleBackColor = true;
             this.btnAddSalesMan.Click += new System.EventHandler(this.btnAddSalesMan_Click);
             // 

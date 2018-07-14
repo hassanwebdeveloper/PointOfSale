@@ -27,5 +27,7 @@ namespace POSRepository
         public DateTime TransactionTime { get; set; }
 
         public int ItemRate { get; set; }
+
+        public string CustomData { get; set; }
     }
 }

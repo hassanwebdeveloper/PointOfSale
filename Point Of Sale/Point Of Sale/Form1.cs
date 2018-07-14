@@ -44,6 +44,11 @@ namespace Point_Of_Sale
                 {
                     this.btnSearch.Enabled = false;
                 }
+
+                if (!LoginForm.mLoggedInUser.ViewPosExpense)
+                {
+                    this.btnManageExpenses.Enabled = false;
+                }
             }
 
             if (LoginForm.mLoggedInUser.SearchItems || LoginForm.mLoggedInUser.RefundBill || LoginForm.mLoggedInUser.CreateBill || LoginForm.mLoggedInUser.IsAdmin)
@@ -60,14 +65,14 @@ namespace Point_Of_Sale
         {
             PointOfSaleForm form = new PointOfSaleForm();
 
-            form.ShowDialog(this);
+            form.Show(this);
         }
 
         private void btnRefund_Click(object sender, EventArgs e)
         {
             POSRefundForm form = new POSRefundForm();
 
-            form.ShowDialog(this);
+            form.Show(this);
         }
 
         protected override void WndProc(ref Message m)
@@ -92,21 +97,35 @@ namespace Point_Of_Sale
 
                     if (parsed)
                     {
-                        List<POSSalesMan> salesMans = POSDbUtility.GetAllPOSSalesMan(salesManId);
+                        Cursor currentCursor = Cursor.Current;
+                        Cursor.Current = Cursors.WaitCursor;
 
-                        if (salesMans.Count > 0 && salesMans[0] != null)
+                        try
                         {
-                            POSSalesMan salesMan = salesMans[0];
+                            List<POSSalesMan> salesMans = POSDbUtility.GetAllPOSSalesMan(salesManId);
 
-                            SalesManAttendanceForm attendanceForm = new SalesManAttendanceForm(salesMan);
+                            if (salesMans.Count > 0 && salesMans[0] != null)
+                            {
+                                POSSalesMan salesMan = salesMans[0];
 
-                            attendanceForm.ShowDialog();
+                                SalesManAttendanceForm attendanceForm = new SalesManAttendanceForm(salesMan);
+
+                                Cursor.Current = currentCursor;
+                                attendanceForm.ShowDialog();
+                            }
+                            else
+                            {
+                                Cursor.Current = currentCursor;
+                                MessageBox.Show("Unable to find salesman for attendance.");
+                            }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            MessageBox.Show("Unable to find salesman.");
+                            string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                            Cursor.Current = currentCursor;
+                            MessageBox.Show(this, "Some error occured in fetching Sales man for attendance.\n\n" + errorMsg);
                         }
-                        
+
                     }
                     else
                     {
@@ -320,7 +339,14 @@ namespace Point_Of_Sale
         {
             SearchPOSItemInfoForm search = new SearchPOSItemInfoForm(string.Empty);
 
-            search.ShowDialog(this);
+            search.Show(this);
+        }
+
+        private void btnManageExpenses_Click(object sender, EventArgs e)
+        {
+            ManageExpenseForm manageExpenseForm = new ManageExpenseForm();
+
+            manageExpenseForm.Show(this);
         }
     }
 }

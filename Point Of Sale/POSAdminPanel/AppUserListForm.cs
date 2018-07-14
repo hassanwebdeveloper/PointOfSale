@@ -18,7 +18,24 @@ namespace POSAdminPanel
         public AppUserListForm()
         {
             InitializeComponent();
-            this.mlstUser = POSDbUtility.GetAllPOSAppuser();
+
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
+            {
+                this.mlstUser = POSDbUtility.GetAllPOSAppuser();
+
+                PopulateRoles(this.mlstUser);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching Application users.\n\n" + errorMsg);
+            }
+
+            Cursor.Current = currentCursor;            
 
             this.bsPOSAppUser.DataSource = this.mlstUser;
         }
@@ -37,7 +54,23 @@ namespace POSAdminPanel
         {
             this.tbxName.Text = string.Empty;
 
-            this.mlstUser = POSDbUtility.GetAllPOSAppuser();
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
+            {
+                this.mlstUser = POSDbUtility.GetAllPOSAppuser();
+
+                PopulateRoles(this.mlstUser);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching application users.\n\n" + errorMsg);
+            }
+
+            Cursor.Current = currentCursor;            
 
             this.bsPOSAppUser.DataSource = null;
             this.bsPOSAppUser.DataSource = this.mlstUser;
@@ -53,10 +86,29 @@ namespace POSAdminPanel
             }
             else
             {
-                this.mlstUser = POSDbUtility.GetAllPOSAppuser();
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
 
-                this.mlstUser = this.mlstUser.FindAll(posItem => posItem.Name.Contains(userName));
+                try
+                {
+                    this.mlstUser = POSDbUtility.GetAllPOSAppuser();
 
+                    PopulateRoles(this.mlstUser);
+
+                    if (this.mlstUser != null)
+                    {
+                        this.mlstUser = this.mlstUser.FindAll(posItem => posItem.Name.Contains(userName));
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(this, "Some error occured in fetching users.\n\n" + errorMsg);
+                }
+
+                Cursor.Current = currentCursor;
 
                 this.bsPOSAppUser.DataSource = null;
                 this.bsPOSAppUser.DataSource = this.mlstUser;
@@ -131,10 +183,21 @@ namespace POSAdminPanel
                 }
                 else
                 {
+                    bool billCreated = (userToDelete.Bills != null && userToDelete.Bills.Count > 0) || (userToDelete.Refunds != null && userToDelete.Refunds.Count > 0);
+
+                    if (billCreated)
+                    {
+                        MessageBox.Show(this, "Some bills or refunds are associated with this app user, so this app user can not be deleted.");
+                        return;
+                    }
+
                     DialogResult dialogResult = MessageBox.Show(this, "Are you sure you want to delete user?", "Confirmation Dialog", MessageBoxButtons.YesNo);
 
                     if (dialogResult == DialogResult.Yes)
                     {
+                        Cursor currentCursor = Cursor.Current;
+                        Cursor.Current = Cursors.WaitCursor;
+                        
                         string errorMsg = string.Empty;
                         POSStatusCodes status = POSDbUtility.DeletePOSAppUser(userToDelete, ref errorMsg, true);
 
@@ -142,6 +205,7 @@ namespace POSAdminPanel
                         {
                             string userName = this.tbxName.Text;
 
+                            Cursor.Current = currentCursor;
                             if (string.IsNullOrEmpty(userName))
                             {
                                 this.ShowAll();
@@ -153,6 +217,7 @@ namespace POSAdminPanel
                         }
                         else
                         {
+                            Cursor.Current = currentCursor;
                             MessageBox.Show(this, "Some error occured in deleting user.\n\n" + errorMsg);
                         }
                     }
@@ -171,11 +236,26 @@ namespace POSAdminPanel
 
             List<POSAppUser> users = this.mlstUser;
 
-            for (int i = 0; i < users.Count; i++)
+            if (users != null)
             {
-                DataGridViewRow row = this.dgvAppUsers.Rows[i];
+                for (int i = 0; i < users.Count; i++)
+                {
+                    DataGridViewRow row = this.dgvAppUsers.Rows[i];
 
-                row.Tag = users[i];
+                    row.Tag = users[i];
+                }
+            }
+            
+        }
+
+        private void PopulateRoles(List<POSAppUser> appUsers)
+        {
+            foreach (POSAppUser appUser in appUsers)
+            {
+                if (appUser != null)
+                {
+                    appUser.PopulatesRolesBoolean();
+                }
             }
         }
     }

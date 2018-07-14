@@ -124,6 +124,7 @@
             this.dgvPOSItems.RowHeadersVisible = false;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgvPOSItems.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvPOSItems.RowTemplate.Height = 25;
             this.dgvPOSItems.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvPOSItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPOSItems.Size = new System.Drawing.Size(704, 298);

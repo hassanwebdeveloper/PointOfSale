@@ -301,7 +301,7 @@
             this.MaximizeBox = false;
             this.Name = "AppUserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Application Users Form";
+            this.Text = "Application User Form";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.panel7.ResumeLayout(false);

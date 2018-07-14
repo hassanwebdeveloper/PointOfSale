@@ -73,9 +73,11 @@
             this.dgvItemTypes.Location = new System.Drawing.Point(16, 54);
             this.dgvItemTypes.Name = "dgvItemTypes";
             this.dgvItemTypes.Size = new System.Drawing.Size(334, 319);
+            this.dgvItemTypes.RowTemplate.Height = 25;
             this.dgvItemTypes.TabIndex = 8;
             this.dgvItemTypes.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvItemTypes_CellEndEdit);
             this.dgvItemTypes.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvItemTypes_DataBindingComplete);
+            this.dgvItemTypes.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvItemTypes_EditingControlShowing);
             this.dgvItemTypes.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dgvItemTypes_UserDeletingRow);
             // 
             // idDataGridViewTextBoxColumn

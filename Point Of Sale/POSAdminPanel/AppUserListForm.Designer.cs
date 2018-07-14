@@ -42,14 +42,14 @@
             this.btnAddNewUser = new System.Windows.Forms.Button();
             this.bsPOSAppUser = new System.Windows.Forms.BindingSource(this.components);
             this.dgvAppUsers = new System.Windows.Forms.DataGridView();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lastNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IsAdmin = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.contactNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsPOSAppUser)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAppUsers)).BeginInit();
@@ -214,42 +214,12 @@
             this.dgvAppUsers.RowHeadersVisible = false;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgvAppUsers.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvAppUsers.RowTemplate.Height = 25;
             this.dgvAppUsers.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvAppUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAppUsers.Size = new System.Drawing.Size(721, 298);
             this.dgvAppUsers.TabIndex = 9;
             this.dgvAppUsers.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvPOSItems_DataBindingComplete);
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.panel7.Controls.Add(this.label7);
-            this.panel7.Location = new System.Drawing.Point(-2, -4);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(751, 53);
-            this.panel7.TabIndex = 35;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Monotype Corsiva", 26.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(38, 5);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(191, 43);
-            this.label7.TabIndex = 34;
-            this.label7.Text = "Admin Panel";
-            // 
-            // panel6
-            // 
-            this.panel6.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.panel6.Controls.Add(this.btnAddNewUser);
-            this.panel6.Controls.Add(this.btnUpdateUser);
-            this.panel6.Controls.Add(this.btnDelete);
-            this.panel6.Location = new System.Drawing.Point(-2, 447);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(751, 64);
-            this.panel6.TabIndex = 36;
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -290,6 +260,37 @@
             this.contactNumberDataGridViewTextBoxColumn.ReadOnly = true;
             this.contactNumberDataGridViewTextBoxColumn.Width = 162;
             // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Location = new System.Drawing.Point(-2, -4);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(751, 53);
+            this.panel7.TabIndex = 35;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Monotype Corsiva", 26.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.White;
+            this.label7.Location = new System.Drawing.Point(38, 5);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(191, 43);
+            this.label7.TabIndex = 34;
+            this.label7.Text = "Admin Panel";
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.panel6.Controls.Add(this.btnAddNewUser);
+            this.panel6.Controls.Add(this.btnUpdateUser);
+            this.panel6.Controls.Add(this.btnDelete);
+            this.panel6.Location = new System.Drawing.Point(-2, 447);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(751, 64);
+            this.panel6.TabIndex = 36;
+            // 
             // AppUserListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -304,7 +305,7 @@
             this.MaximizeBox = false;
             this.Name = "AppUserListForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AppUserListForm";
+            this.Text = "Application Users";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsPOSAppUser)).EndInit();

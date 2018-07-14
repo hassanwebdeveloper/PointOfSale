@@ -26,5 +26,21 @@ namespace POSRepository
         public string RefundTermsAndConditions { get; set; }
 
         public string ThanksNote { get; set; }
+
+        public string FromEmailAddress { get; set; }
+
+        public string ToEmailAddress { get; set; }
+
+        public string Password { get; set; }
+
+        public string SmtpServer { get; set; }
+
+        public string SmtpPort { get; set; }        
+
+        public bool IsSmptSSL { get; set; }
+
+        public bool IsSmptAuthRequired { get; set; }
+
+        public string CustomData { get; set; }
     }
 }

@@ -21,6 +21,8 @@ namespace POSRepository
 
         public bool Refunded { get; set; }
 
+        public bool Exchange { get; set; }
+
         [ForeignKey("BillInfo")]
         public int? BillId { get; set; }
 
@@ -31,12 +33,24 @@ namespace POSRepository
 
         public virtual POSAppUser AppUser { get; set; }
 
+        public string CustomData { get; set; }
+
         [NotMapped]
         public string Barcode
         {
             get
             {
-                return "Ref" + this.Id;
+                string barCode = Convert.ToString(this.Id);
+
+                if (barCode.Length < 8)
+                {
+                    for (int i = barCode.Length; i < 8; i++)
+                    {
+                        barCode = "0" + barCode;
+                    }
+                }
+
+                return "Ref" + barCode;
             }
         }
 

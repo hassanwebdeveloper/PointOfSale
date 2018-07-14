@@ -18,45 +18,82 @@ namespace POSRepository
 
             if (!string.IsNullOrEmpty(itemName))
             {
-                List<POSItemInfo> items = POSDbUtility.GetAllPOSItems();
-                POSItemInfo item = items.Find(posItem => posItem.Barcode == itemName);
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
 
-                if (item == null)
+                try
                 {
-                    items = items.FindAll(posItem => posItem.Name.Contains(itemName));
+                    List<POSItemInfo> items = POSDbUtility.GetAllPOSItems();
 
-                    if (items == null || items.Count == 0)
+                    POSItemInfo item = null;
+
+                    if (items != null)
                     {
-                        List<POSRefundInfo> refunds = POSDbUtility.GetAllPOSRefundInfo();
+                        item = items.Find(posItem => posItem.Barcode == itemName);
+                    }                    
 
-                        POSRefundInfo refundInfo = refunds.Find(refund => refund.Barcode == itemName);
+                    if (item == null)
+                    {
+                        item = items.Find(posItem => posItem.Id.ToString() == itemName);
 
-                        if (refundInfo != null)
+                        if (item == null)
                         {
-                            if (refundInfo.Refunded)
+                            if (items != null)
                             {
-                                MessageBox.Show(form, "This refund slip is already refunded.");
+                                items = items.FindAll(posItem => posItem.Name.ToLower().Contains(itemName.ToLower()));
+                            }
+
+
+                            if (items == null || items.Count == 0)
+                            {
+                                List<POSRefundInfo> refunds = POSDbUtility.GetAllPOSRefundInfo();
+
+                                POSRefundInfo refundInfo = null;
+
+                                if (refunds != null)
+                                {
+                                    refundInfo = refunds.Find(refund => refund.Barcode == itemName);
+                                }
+
+                                if (refundInfo != null)
+                                {
+                                    if (refundInfo.Refunded)
+                                    {
+                                        Cursor.Current = currentCursor;
+                                        MessageBox.Show(form, "This refund slip is already refunded.");
+                                    }
+                                    else
+                                    {
+                                        gridItems.Add(new POSGridItemInfo(refundInfo));
+                                    }
+
+                                }
                             }
                             else
                             {
-                                gridItems.Add(new POSGridItemInfo(refundInfo));
+                                gridItems.AddRange((from posItem in items
+                                                    where posItem != null
+                                                    select new POSGridItemInfo(posItem)).ToList());
                             }
-
+                        }
+                        else
+                        {
+                            gridItems.Add(new POSGridItemInfo(item));
                         }
                     }
                     else
                     {
-                        gridItems.AddRange((from posItem in items
-                                            where posItem != null
-                                            select new POSGridItemInfo(posItem)).ToList());
+                        gridItems.Add(new POSGridItemInfo(item));
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    gridItems.Add(new POSGridItemInfo(item));
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(form, "Some error occured in fetching users.\n\n" + errorMsg);
                 }
 
-
+                Cursor.Current = currentCursor;
             }
 
             return gridItems;
@@ -161,8 +198,34 @@ namespace POSRepository
                 e.Handled = true;
         }
 
-        public static void DrawShopInfo(Graphics graphic, string shopName, string shopAddress, string contactInfo, ref int pixY, Brush nameBrush = null, Brush addressBrush = null, Brush contactBrush = null, string nameFontFamily = null, string addressFontFamily = null, string contactFontFamily = null, bool fillBackGround = true, int pixX = 0, int width = 280, int fontSize = 9, int fontHeight = 26)
+        public static void DrawShopInfo(Graphics graphic, string shopName, string shopAddress, string contactInfo, ref int pixY, Brush nameBrush = null, Brush addressBrush = null, Brush contactBrush = null, string nameFontFamily = null, string addressFontFamily = null, string contactFontFamily = null, bool fillBackGround = true, int pixX = 0, int width = 280, int fontSize = 9, int fontHeight = 26, bool addLogo = true, Form form = null)
         {
+            if (addLogo)
+            {
+                try
+                {
+                    graphic.DrawImage(System.Drawing.Image.FromFile("Images/ProductLogo.jpg"), 90, pixY, 100, 100);
+
+                    pixY += 100;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+
+                    if (form != null)
+                    {
+                        MessageBox.Show(form, "Some Error Occurred in adding image./n/n" + errorMsg);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Some Error Occurred in adding image./n/n" + errorMsg);
+                    }
+                   
+                }
+                
+            }
+           
+
             POSComonUtility.Draw16FontSizeText(graphic, shopName, FontStyle.Bold, StringAlignment.Center, StringAlignment.Center, width, 1, fillBackGround, true, true, true, ref pixY, pixX, brush: nameBrush, fontFamily:nameFontFamily, fontHeight: fontHeight);
 
             if (fontSize == 9)
@@ -188,7 +251,7 @@ namespace POSRepository
 
         public static void DrawSalesManInfo(Graphics graphic, string salesManName, ref int pixY, int pixX, int width = 200)
         {
-            POSComonUtility.Draw12FontSizeText(graphic, "Sales Man:", FontStyle.Regular | FontStyle.Underline, StringAlignment.Near, StringAlignment.Center, width, 4, false, false, true, true, ref pixY, pixX, brush: Brushes.DarkBlue);
+            POSComonUtility.Draw12FontSizeText(graphic, "Sales Man:", FontStyle.Regular | FontStyle.Underline, StringAlignment.Near, StringAlignment.Center, width, 3, false, false, true, true, ref pixY, pixX, brush: Brushes.DarkBlue);
 
             POSComonUtility.Draw16FontSizeText(graphic, salesManName, FontStyle.Bold, StringAlignment.Center, StringAlignment.Center, width, 1, false, false, true, true, ref pixY, pixX, brush: Brushes.DarkBlue);
         }
@@ -320,7 +383,7 @@ namespace POSRepository
 
             pixY += bigestHeight;
 
-            height1 = POSComonUtility.Draw9FontSizeText(graphic, "Amount Refunded: ", FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 140, 1, false, false, false, true, ref pixY);
+            height1 = POSComonUtility.Draw9FontSizeText(graphic, "Refunded: ", FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 140, 1, false, false, false, true, ref pixY);
             bigestHeight = height1;
 
             height2 = POSComonUtility.Draw9FontSizeText(graphic, amountRefunded ? "Yes" : "No", FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 140, 0, false, false, false, false, ref pixY, 70);
@@ -339,7 +402,7 @@ namespace POSRepository
 
             POSComonUtility.Draw9FontSizeText(graphic, "Product Name", FontStyle.Bold, StringAlignment.Near, StringAlignment.Center, 143, 1, true, true, false, false, ref pixY, 29, borderPen: Pens.White, addFillHeight: true);
 
-            POSComonUtility.Draw9FontSizeText(graphic, "Price", FontStyle.Bold, StringAlignment.Near, StringAlignment.Center, 35, 1, true, true, false, false, ref pixY, 173, borderPen: Pens.White, addFillHeight: true);
+            POSComonUtility.Draw9FontSizeText(graphic, "Price", FontStyle.Bold, StringAlignment.Near, StringAlignment.Center, 41, 1, true, true, false, false, ref pixY, 167, borderPen: Pens.White, addFillHeight: true);
 
             POSComonUtility.Draw9FontSizeText(graphic, "Dis", FontStyle.Bold, StringAlignment.Near, StringAlignment.Center, 28, 1, true, true, false, false, ref pixY, 209, borderPen: Pens.White, addFillHeight: true);
 
@@ -371,7 +434,7 @@ namespace POSRepository
 
             pixY = pixYtemp;
 
-            int height4 = POSComonUtility.Draw9FontSizeText(graphic, price, FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 35, 1, false, false, false, false, ref pixY, 173);
+            int height4 = POSComonUtility.Draw9FontSizeText(graphic, price, FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 41, 1, false, false, false, false, ref pixY, 167);
 
             if (bigestHeight < height4)
             {
@@ -471,35 +534,37 @@ namespace POSRepository
         {
             bool addTopGap = true;
 
-            if (systemSettings != null && !string.IsNullOrEmpty(systemSettings.BillTermsAndConditions))
+            if (systemSettings != null)
             {
-                List<string> termsAndCoditions = isRefund ? systemSettings.RefundTermsAndConditions.Split('^').ToList() : systemSettings.BillTermsAndConditions.Split('^').ToList();
-
-                foreach (string terms in termsAndCoditions)
+                if ((!isRefund && !string.IsNullOrEmpty(systemSettings.BillTermsAndConditions)) ||
+                    (isRefund && !string.IsNullOrEmpty(systemSettings.RefundTermsAndConditions)))
                 {
-                    if (addTopGap)
+                    List<string> termsAndCoditions = isRefund ? systemSettings.RefundTermsAndConditions.Split('^').ToList() : systemSettings.BillTermsAndConditions.Split('^').ToList();
+
+                    foreach (string terms in termsAndCoditions)
                     {
-                        POSComonUtility.Draw9FontSizeText(graphic, terms, FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 280, 3, false, false, true, true, ref pixY);
-                        addTopGap = false;
+                        if (addTopGap)
+                        {
+                            POSComonUtility.Draw9FontSizeText(graphic, terms, FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 280, 3, false, false, true, true, ref pixY);
+                            addTopGap = false;
+                        }
+                        else
+                        {
+                            POSComonUtility.Draw9FontSizeText(graphic, terms, FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 280, 0, false, false, true, false, ref pixY);
+                        }
                     }
-                    else
-                    {
-                        POSComonUtility.Draw9FontSizeText(graphic, terms, FontStyle.Regular, StringAlignment.Near, StringAlignment.Center, 280, 0, false, false, true, false, ref pixY);
-                    }
+                }
+                
+
+                string thanksNote = systemSettings.ThanksNote;
+
+                if (!string.IsNullOrEmpty(thanksNote))
+                {
+                    POSComonUtility.Draw16FontSizeText(graphic, thanksNote, FontStyle.Regular, StringAlignment.Center, StringAlignment.Center, 280, 0, false, false, true, addTopGap, ref pixY);
                 }
             }
 
-            //string condition1 = "1. Kindly bring cash invoice after sales and services.";
-            //string condition2 = "2. In terms of exchange and refund items should be in saleable condition with orignal packing.";
-            //string condition3 = "3. Store timing: 11AM to 11PM, Sunday Open and on Friday store will open at 3PM";
-            string thanksNote = systemSettings.ThanksNote;
-
-            if (!string.IsNullOrEmpty(thanksNote))
-            {
-                POSComonUtility.Draw16FontSizeText(graphic, thanksNote, FontStyle.Regular, StringAlignment.Center, StringAlignment.Center, 280, 0, false, false, true, addTopGap, ref pixY);
-            }
-
-            string aboutDev = "Designed and developed by Hassan Ahmed Baig h.baig34@gmail.com";
+            string aboutDev = "Designed and developed by Hassan Ahmed Baig (h.baig34@gmail.com)";
             
             graphic.DrawLine(Pens.Black, 0, pixY, 280, pixY);
 
@@ -620,7 +685,17 @@ namespace POSRepository
                                             bool printBarcode,
                                             bool createBill,
                                             bool refundBill,
-                                            bool searchItems)
+                                            bool searchItems, 
+                                            bool viewInvExpense,
+                                            bool updateInvExpense,
+                                            bool viewPosExpense,
+                                            bool updatePosExpense,
+                                            bool fastRunningReport,
+                                            bool accountsReport,
+                                            bool profitAndSaleReport,
+                                            bool employeeReport,
+                                            bool stockReport,
+                                            bool dailyReport)
         {
             string roles = string.Empty;
 
@@ -666,7 +741,57 @@ namespace POSRepository
 
             if (searchItems)
             {
-                roles += "SearchItem";
+                roles += "SearchItem,";
+            }
+
+            if (updateInvExpense)
+            {
+                roles += "UpdateInvExpense,";
+            }
+
+            if (viewInvExpense)
+            {
+                roles += "ViewInvExpense,";
+            }
+
+            if (updatePosExpense)
+            {
+                roles += "UpdatePosExpense,";
+            }
+
+            if (viewPosExpense)
+            {
+                roles += "ViewPosExpense,";
+            }
+
+            if (fastRunningReport)
+            {
+                roles += "FastRunningReport,";
+            }
+
+            if (accountsReport)
+            {
+                roles += "AccountsReport,";
+            }
+
+            if (profitAndSaleReport)
+            {
+                roles += "ProfitAndSaleReport,";
+            }
+
+            if (employeeReport)
+            {
+                roles += "EmployeeReport,";
+            }
+
+            if (stockReport)
+            {
+                roles += "StockReport,";
+            }
+
+            if (dailyReport)
+            {
+                roles += "DailyReport";
             }
 
             return roles;
@@ -678,5 +803,13 @@ namespace POSRepository
         Success,
         Failed,
         Aborted
+    }
+
+    public enum POSBillPaymentMethod
+    {
+        Cash = 0,
+        DebitCard = 1,
+        CreditCard = 2,
+        Online = 3
     }
 }

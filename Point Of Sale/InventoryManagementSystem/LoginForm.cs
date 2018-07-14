@@ -21,11 +21,24 @@ namespace InventoryManagementSystem
 
         public LoginForm()
         {
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            
             InitializeComponent();
 
-            this.mUsers = POSDbUtility.GetAllPOSAppuser();
+            try
+            {
+                this.mUsers = POSDbUtility.GetAllPOSAppuser();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching users.\n\n" + errorMsg);
+            }
+            
 
-            if (this.mUsers.Count == 0)
+            if (this.mUsers == null || this.mUsers.Count == 0)
             {
                 this.btnLogin.Enabled = false;
             }
@@ -33,6 +46,8 @@ namespace InventoryManagementSystem
             this.lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.tbxUserName.Select();
             mMainForm = this;
+
+            Cursor.Current = currentCursor;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

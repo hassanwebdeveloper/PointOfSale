@@ -25,5 +25,7 @@ namespace POSRepository
         public virtual int SalesManId { get; set; }
 
         public POSSalesMan SalesMan { get; set; }
+
+        public string CustomData { get; set; }
     }
 }

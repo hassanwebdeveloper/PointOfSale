@@ -66,7 +66,10 @@ namespace POSRepository
             return item;
         }
 
-        public static POSItemTransactionItem CreatePOSItemTransactionItem(POSItemInfo item, bool isPurchased, int itemsCount, int itemRate)
+        public static POSItemTransactionItem CreatePOSItemTransactionItem(POSItemInfo item,
+                                                                          bool isPurchased, 
+                                                                          int itemsCount,
+                                                                          int itemRate)
         {
             POSItemTransactionItem transactionItem = new POSItemTransactionItem();
 
@@ -229,6 +232,7 @@ namespace POSRepository
             billInfo.SalesMan = salesMan;
             billInfo.Refunds = refunds;
             billInfo.BillCreatedDate = DateTime.Now;
+            billInfo.PaymentMethod = POSBillPaymentMethod.Cash;
 
             return billInfo;
         }
@@ -262,6 +266,7 @@ namespace POSRepository
                                                                 List<POSRefundItemInfo> refundItems,
                                                                 POSBillInfo billInfo,
                                                                 bool refunded,
+                                                                bool exchange,
                                                                 DateTime refundDate,
                                                                 POSAppUser appUser)
         {
@@ -278,6 +283,7 @@ namespace POSRepository
 
             refundInfo.RefundItems = refundItems;
             refundInfo.Refunded = refunded;
+            refundInfo.Exchange = exchange;
             refundInfo.AppUser = appUser;
             refundInfo.BillInfo = billInfo;
             refundInfo.RefundDate = refundDate;
@@ -361,21 +367,52 @@ namespace POSRepository
         {
             POSAttendanceInfo attendanceInfo = null;
 
-            if (posAttendanceInfo == null)
+            if (salesMan != null)
             {
-                attendanceInfo = new POSAttendanceInfo();
+                if (posAttendanceInfo == null)
+                {
+                    attendanceInfo = new POSAttendanceInfo();
+                }
+                else
+                {
+                    attendanceInfo = posAttendanceInfo;
+                }
+
+                attendanceInfo.OnDuty = onDuty;
+                attendanceInfo.InTime = inTime;
+                attendanceInfo.OutTime = outTime;
+                attendanceInfo.SalesMan = salesMan;
+            }
+            
+
+            return attendanceInfo;
+        }
+
+        public static POSExpenseInfo CreateOrUpdatePOSExpenseInfo(POSExpenseInfo posExpenseInfo,
+                                                                string name,
+                                                                string location,
+                                                                int ammount,
+                                                                DateTime expenseTime,
+                                                                POSAppUser appUser)
+        {
+            POSExpenseInfo expenseInfo = null;
+
+            if (posExpenseInfo == null)
+            {
+                expenseInfo = new POSExpenseInfo();
             }
             else
             {
-                attendanceInfo = posAttendanceInfo;
+                expenseInfo = posExpenseInfo;
             }
 
-            attendanceInfo.OnDuty = onDuty;
-            attendanceInfo.InTime = inTime;
-            attendanceInfo.OutTime = outTime;
-            attendanceInfo.SalesMan = salesMan;
+            expenseInfo.Name = name;
+            expenseInfo.Ammount = ammount;
+            expenseInfo.AppUser = appUser;
+            expenseInfo.Location = location;
+            expenseInfo.ExpenseTime = expenseTime;
 
-            return attendanceInfo;
+            return expenseInfo;
         }
     }
 }

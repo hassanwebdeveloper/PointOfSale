@@ -12,7 +12,9 @@ namespace POSReports
 
         public string Value { get; set; }
 
-        public int ColSpan { get; set; }
+        public int LabelColSpan { get; set; }
+
+        public int ValueColSpan { get; set; }
 
         public int RowHeight { get; set; }
     }

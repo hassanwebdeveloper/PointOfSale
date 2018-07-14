@@ -20,9 +20,23 @@ namespace POSReports
         {
             InitializeComponent();
 
-            this.mLstSalesMan = POSDbUtility.GetAllPOSSalesMan(-1);
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
 
-            if (mLstSalesMan.Count > 0)
+            try
+            {
+                this.mLstSalesMan = POSDbUtility.GetAllPOSSalesMan(-1);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching sales man.\n\n" + errorMsg);                
+            }
+
+            Cursor.Current = currentCursor;            
+
+            if (this.mLstSalesMan != null && this.mLstSalesMan.Count > 0)
             {
                 List<CCBoxItem> lstStrSalesMan = (from salesMan in mLstSalesMan
                                                   where salesMan != null
@@ -34,7 +48,7 @@ namespace POSReports
                 cbxSalesMans.MaxDropDownItems = 5;
                 // Make the "Name" property the one to display, rather than the ToString() representation.
                 cbxSalesMans.DisplayMember = "Name";
-                cbxSalesMans.ValueSeparator = ", ";
+                //cbxSalesMans.ValueSeparator = ", ";
             }
             else
             {
@@ -48,124 +62,149 @@ namespace POSReports
             DateTime fromDate = dtpFrom.Value.Date;
             DateTime ToDate = dtpTo.Value.Date.AddDays(1);
 
-            CheckedListBox.CheckedItemCollection selectedItems = cbxSalesMans.CheckedItems;
-            
-            if (selectedItems != null && selectedItems.Count > 0)
+            //CheckedListBox.CheckedItemCollection selectedItems = cbxSalesMans.CheckedItems;
+            CCBoxItem selectedItem = cbxSalesMans.SelectedItem as CCBoxItem;
+
+
+            if (selectedItem != null)
             {
-                this.mReport = new POSReportConfig();
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
 
-                POSReportsCommonUtility.SetReportConfigStyling(this.mReport);
-
-                this.mReport.SheetName = "Employee Report";
-                this.mReport.Heading = "Employee Report";
-
-                List<POSReportMetaInfo> metaInfos = new List<POSReportMetaInfo>();
-
-                metaInfos.Add(new POSReportMetaInfo() { ColSpan = 1, Label = "From Date:", RowHeight = 20, Value = dtpFrom.Value.Date.ToString() });
-                metaInfos.Add(new POSReportMetaInfo() { ColSpan = 1, Label = "To Date:", RowHeight = 20, Value = dtpTo.Value.Date.ToString() });
-
-                this.mReport.MetaInfo = metaInfos;
-
-                foreach (CCBoxItem item in selectedItems)
+                try
                 {
-                    if (item != null)
-                    {
-                        metaInfos.Add(new POSReportMetaInfo() { ColSpan = 1, Label = "Employee Name:", RowHeight = 20, Value = item.Name });
-                    }                    
-                }
+                    this.mReport = new POSReportConfig();
 
-                List<POSReportColumn> columns = new List<POSReportColumn>();
+                    POSReportsCommonUtility.SetReportConfigStyling(this.mReport);
 
-                columns.Add(new POSReportColumn() { Name = "ID", Width = 18 });
-                columns.Add(new POSReportColumn() { Name = "Name", Width = 40 });
-                columns.Add(new POSReportColumn() { Name = "Date", Width = 25 });
-                columns.Add(new POSReportColumn() { Name = "Items Sold", Width = 25 });
-                columns.Add(new POSReportColumn() { Name = "Salary", Width = 20 });
-                columns.Add(new POSReportColumn() { Name = "Commision", Width = 20 });
-                columns.Add(new POSReportColumn() { Name = "Total", Width = 20 });
+                    this.mReport.SheetName = "Employee Report";
+                    this.mReport.Heading = "Employee Report";
 
-                this.mReport.Columns = columns;
+                    List<POSReportMetaInfo> metaInfos = new List<POSReportMetaInfo>();
 
-                List<POSReportData> data = new List<POSReportData>();
+                    metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "From Date:", RowHeight = 20, Value = dtpFrom.Value.Date.ToString() });
+                    metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "To Date:", RowHeight = 20, Value = dtpTo.Value.Date.ToString() });
 
-                string id, name, date, salary, itemsSoldString, commisionSting, totalString = string.Empty;
+                    this.mReport.MetaInfo = metaInfos;
 
-                int salaryValue, daysInMonth = 0;
+                    //foreach (CCBoxItem item in selectedItems)
+                    //{
+                    //    if (item != null)
+                    //    {
+                            metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Employee Name:", RowHeight = 20, Value = selectedItem.Name });
+                    //    }
+                    //}
 
-                bool monthWise = rdbMonthWise.Checked;
+                    List<POSReportColumn> columns = new List<POSReportColumn>();
 
-                foreach (CCBoxItem item in selectedItems)
-                {
-                    if (item != null)
-                    {
-                        POSSalesMan salesMan = this.mLstSalesMan.Find(s => s.Id == item.Value);
+                    columns.Add(new POSReportColumn() { Name = "ID", Width = 18 });
+                    columns.Add(new POSReportColumn() { Name = "Name", Width = 40 });
+                    columns.Add(new POSReportColumn() { Name = "Date", Width = 25 });
+                    columns.Add(new POSReportColumn() { Name = "Salary", Width = 20 });
+                    columns.Add(new POSReportColumn() { Name = "Items Sold", Width = 25 });                    
+                    columns.Add(new POSReportColumn() { Name = "Commision", Width = 20 });
+                    columns.Add(new POSReportColumn() { Name = "Total", Width = 20 });
 
-                        if (salesMan != null && salesMan.Bills != null)
-                        {
-                            List<POSBillInfo> bills = salesMan.Bills.FindAll(bill => bill !=null && bill.BillCreatedDate >= fromDate && bill.BillCreatedDate < ToDate);
+                    this.mReport.Columns = columns;
 
-                            Dictionary<string, List<int>> salesManData = new Dictionary<string, List<int>>();
+                    List<POSReportData> data = new List<POSReportData>();
 
-                            if (bills != null)
+                    string id, name, date = string.Empty;
+
+                    int salary, itemsSoldInt, commisionInt, totalInt = 0;
+
+                    int salaryValue, daysInMonth = 0;
+
+                    bool monthWise = rdbMonthWise.Checked;
+
+                    //foreach (CCBoxItem item in selectedItems)
+                    //{
+                        //if (item != null)
+                        //{
+                            POSSalesMan salesMan = this.mLstSalesMan.Find(s => s.Id == selectedItem.Value);
+
+                            if (salesMan != null && salesMan.Bills != null)
                             {
-                                foreach (POSBillInfo bill in bills)
+                                List<POSBillInfo> bills = salesMan.Bills.FindAll(bill => bill != null && bill.BillCreatedDate >= fromDate && bill.BillCreatedDate < ToDate);
+
+                                Dictionary<string, List<int>> salesManData = new Dictionary<string, List<int>>();
+
+                                if (bills != null)
                                 {
-                                    string currentDate = monthWise ? bill.BillCreatedDate.ToString("MMMM") : bill.BillCreatedDate.Date.ToShortDateString();
-
-                                    daysInMonth = DateTime.DaysInMonth(bill.BillCreatedDate.Year, bill.BillCreatedDate.Month);
-
-                                    salaryValue = monthWise ? (salesMan.Salary / daysInMonth) : salesMan.Salary;
-                                    //salary = monthWise ? salaryValue.ToString() : salaryValue.ToString();
-                                    int itemsSold = bill.TotalItems;
-                                    int commision = bill.TotalSalesManCommision;
-
-                                    List<int> financeData = new List<int>();
-
-                                    if (salesManData.ContainsKey(currentDate))
+                                    foreach (POSBillInfo bill in bills)
                                     {
-                                        financeData = salesManData[currentDate];
+                                        if (bill == null)
+                                        {
+                                            continue;
+                                        }
 
-                                        financeData[0] = salaryValue;
-                                        financeData[1] += itemsSold;
-                                        financeData[2] += commision;
-                                        financeData[3] += commision;
-                                    }
-                                    else
-                                    {
-                                        financeData.Add(salaryValue);
-                                        financeData.Add(itemsSold);
-                                        financeData.Add(commision);
-                                        financeData.Add(salaryValue + commision);
-                                    }
-                                }
+                                        string currentDate = monthWise ? bill.BillCreatedDate.ToString("MMMM") : bill.BillCreatedDate.Date.ToShortDateString();
 
-                                id = salesMan.Barcode.ToString();
-                                name = salesMan.Name + " " + salesMan.LastName;
+                                        daysInMonth = DateTime.DaysInMonth(bill.BillCreatedDate.Year, bill.BillCreatedDate.Month);
+                                        int perDaySalary = (salesMan.Salary / daysInMonth);
 
-                                foreach (KeyValuePair<string, List<int>> dataItem in salesManData)
-                                {
-                                    List<int> financeData = dataItem.Value;
+                                        salaryValue = monthWise ? salesMan.Salary : perDaySalary;
 
-                                    if (financeData == null || financeData.Count < 4)
-                                    {
-                                        continue;
+                                        int itemsSold = bill.TotalItems;
+                                        int commision = bill.TotalSalesManCommision;
+
+                                        List<int> financeData = new List<int>();
+
+                                        if (salesManData.ContainsKey(currentDate))
+                                        {
+                                            financeData = salesManData[currentDate];
+
+                                            financeData[0] = salaryValue;
+                                            financeData[1] += itemsSold;
+                                            financeData[2] += commision;
+                                            financeData[3] += commision;
+                                        }
+                                        else
+                                        {
+                                            financeData.Add(salaryValue);
+                                            financeData.Add(itemsSold);
+                                            financeData.Add(commision);
+                                            financeData.Add(salaryValue + commision);
+                                            salesManData.Add(currentDate, financeData);
+                                        }
                                     }
 
-                                    date = dataItem.Key;
-                                    salary = financeData[0].ToString();
-                                    itemsSoldString = financeData[1].ToString();
-                                    commisionSting = financeData[2].ToString();
-                                    totalString = financeData[3].ToString();
+                                    id = salesMan.Barcode.ToString();
+                                    name = salesMan.Name + " " + salesMan.LastName;
 
-                                    data.Add(new POSReportData() { Values = new List<string>() { id, name, date, salary, itemsSoldString, commisionSting, totalString } });
+                                    foreach (KeyValuePair<string, List<int>> dataItem in salesManData)
+                                    {
+                                        List<int> financeData = dataItem.Value;
+
+                                        if (financeData == null || financeData.Count < 4)
+                                        {
+                                            continue;
+                                        }
+
+                                        date = dataItem.Key;
+                                        salary = financeData[0];
+                                        itemsSoldInt = financeData[1];
+                                        commisionInt = financeData[2];
+                                        totalInt = financeData[3];
+
+                                        data.Add(new POSReportData() { Values = new List<object>() { id, name, date, salary, itemsSoldInt, commisionInt, totalInt } });
+                                    }
                                 }
                             }
-                        }
-                    }
+                        //}
+                    //}
+
+                    this.mReport.Data = data;
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(this, "Some error occured in generating report.\n\n" + errorMsg);
                 }
 
-                this.mReport.Data = data;
-
+                Cursor.Current = currentCursor;
+                this.Close();
             }
             else
             {

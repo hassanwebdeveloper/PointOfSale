@@ -22,7 +22,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -63,6 +63,7 @@
     <Compile Include="POSDb\POSBillInfo.cs" />
     <Compile Include="POSDb\POSBillItemInfo.cs" />
     <Compile Include="POSDb\PosDbContext.cs" />
+    <Compile Include="POSDb\POSExpenseInfo.cs" />
     <Compile Include="POSDb\POSItemCategory.cs" />
     <Compile Include="POSDb\POSItemInfo.cs" />
     <Compile Include="POSDb\POSItemPurchaseInfo.cs" />

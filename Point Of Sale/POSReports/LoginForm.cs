@@ -19,12 +19,33 @@ namespace POSReports
         {
             InitializeComponent();
 
-            this.mUsers = POSDbUtility.GetAllPOSAppuser();
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
 
-            if (this.mUsers.Count == 0)
+            try
             {
-                this.btnLogin.Enabled = false;
+                this.mUsers = POSDbUtility.GetAllPOSAppuser();
+
+                if (this.mUsers == null)
+                {
+                    this.btnLogin.Enabled = false;
+                }
+                else
+                {
+                    if (this.mUsers.Count == 0)
+                    {
+                        this.btnLogin.Enabled = false;
+                    }
+                }
             }
+            catch (Exception e)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching users.\n\n" + errorMsg);
+            }
+
+            Cursor.Current = currentCursor;            
 
             this.lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.tbxUserName.Select();

@@ -13,6 +13,8 @@ namespace POSRepository
 
         private POSRefundInfo mRefundInfo = null;
 
+        private int mOrderQuantity = 0;
+
         public POSGridItemInfo(POSItemInfo posItemInfo)
         {
             this.mPOSItemInfo = posItemInfo;
@@ -84,26 +86,27 @@ namespace POSRepository
         {
             get
             {
-                int quantity = 0;
+                //int quantity = 0;
 
-                if (this.mPOSItemInfo == null)
-                {
-                    quantity = this.mRefundInfo.Quantity;
-                }
-                else
-                {
-                    quantity = this.mPOSItemInfo.OrderQuantity;
-                }
+                //if (this.mPOSItemInfo == null)
+                //{
+                //    quantity = this.mRefundInfo.Quantity;
+                //}
+                //else
+                //{
+                //    quantity = this.mPOSItemInfo.OrderQuantity;
+                //}
 
-                return quantity;
+                return this.mOrderQuantity;
             }
 
             set
             {
-                if (this.mPOSItemInfo != null)
-                {
-                    this.mPOSItemInfo.OrderQuantity = value;
-                }
+                this.mOrderQuantity = value;
+                //if (this.mPOSItemInfo != null)
+                //{
+                //    this.mPOSItemInfo.OrderQuantity = value;
+                //}
             }
         }
 
@@ -134,6 +137,14 @@ namespace POSRepository
             }
         }
 
+        public int TotalDiscount
+        {
+            get
+            {
+                return this.Discount * this.Quantity;
+            }
+        }
+
         public int Total
         {
             get
@@ -146,7 +157,7 @@ namespace POSRepository
                 }
                 else
                 {
-                    total = this.mPOSItemInfo. OrderTotal;
+                    total = this.mPOSItemInfo.GetOrderTotal(this.mOrderQuantity);
                 }
 
                 return total;
@@ -161,13 +172,25 @@ namespace POSRepository
 
                 if (this.mPOSItemInfo != null)
                 {
-                    quantity = this.mPOSItemInfo.RemaningQuantity;
+                    quantity = this.mPOSItemInfo.GetRemaningQuantity(this.mOrderQuantity);
                 }               
 
                 return quantity;
             }
         }
-        
+
+        public int GetRemaningQuantity(int orderQuantity)
+        {
+            int quantity = 0;
+
+            if (this.mPOSItemInfo != null)
+            {
+                quantity = this.mPOSItemInfo.GetRemaningQuantity(orderQuantity);
+            }
+
+            return quantity;
+        }
+
         public int DiscountedPrice
         {
             get

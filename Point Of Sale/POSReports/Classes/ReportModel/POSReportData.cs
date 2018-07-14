@@ -8,6 +8,6 @@ namespace POSReports
 {
     public class POSReportData
     {
-        public List<string> Values { get; set; }
+        public List<object> Values { get; set; }
     }
 }

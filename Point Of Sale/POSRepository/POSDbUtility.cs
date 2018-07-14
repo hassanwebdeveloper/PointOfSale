@@ -15,7 +15,7 @@ namespace POSRepository
         #region Vendors
 
         public static List<VendorInfo> GetAllVendors()
-        {
+        {            
             List<VendorInfo> lstVendors = new List<VendorInfo>();            
 
             lstVendors = (from vendor in mDbContext.Vendors
@@ -75,7 +75,9 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(vendor).State = EntityState.Deleted;
+                
+                mDbContext.Vendors.Remove(vendor);//.Entry(vendor).State = EntityState.Deleted;
+                mDbContext.POSItems.RemoveRange(vendor.Items);
 
                 if (saveChanges)
                 {
@@ -189,7 +191,7 @@ namespace POSRepository
         {
             List<POSItemInfo> lstPOSItemInfos = new List<POSItemInfo>();
 
-            lstPOSItemInfos = (from pOSItem in mDbContext.POSItems.Include("Category").Include("Vendor").Include("Type")
+            lstPOSItemInfos = (from pOSItem in mDbContext.POSItems.Include("Category").Include("Vendor").Include("Type").Include("BillItems.PosBill")
                                where pOSItem != null
                                select pOSItem).ToList();
 
@@ -253,7 +255,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posItem).State = EntityState.Deleted;
+                mDbContext.POSItems.Remove(posItem);// Entry(posItem).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -340,7 +342,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posItemType).State = EntityState.Deleted;
+                mDbContext.POSTypes.Remove(posItemType);// Entry(posItemType).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -428,7 +430,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posItemCategory).State = EntityState.Deleted;
+                mDbContext.POSCategories.Remove(posItemCategory);//.Entry(posItemCategory).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -447,7 +449,7 @@ namespace POSRepository
             return status;
         }
 
-        #endregion POSItems
+        #endregion POSItemCategories
 
         #region POSPurchaseInfos
 
@@ -461,6 +463,18 @@ namespace POSRepository
 
             return lstPOSPurchases;
         }
+
+        public static List<POSItemTransactionInfo> GetAllPOSPurchases(DateTime fromDate, DateTime toDate)
+        {
+            List<POSItemTransactionInfo> lstPOSPurchases = new List<POSItemTransactionInfo>();
+
+            lstPOSPurchases = (from posPurchase in mDbContext.POSPurchases
+                               where posPurchase != null && posPurchase.TransactionTime >= fromDate && posPurchase.TransactionTime < toDate
+                               select posPurchase).ToList();
+
+            return lstPOSPurchases;
+        }
+
 
         public static POSStatusCodes AddPOSPurchase(POSItemTransactionInfo posPurchase, ref string errorMsg, bool saveChanges)
         {
@@ -515,7 +529,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posPurchase).State = EntityState.Deleted;
+                mDbContext.POSPurchases.Remove(posPurchase);//.Entry(posPurchase).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -602,7 +616,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posAppUser).State = EntityState.Deleted;
+                mDbContext.POSAppUsers.Remove(posAppUser);//.Entry(posAppUser).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -700,7 +714,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posSalesMan).State = EntityState.Deleted;
+                mDbContext.POSSalesMans.Remove(posSalesMan);//.Entry(posSalesMan).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -797,7 +811,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posAttendanceInfo).State = EntityState.Deleted;
+                mDbContext.POSAttendanceInfo.Remove(posAttendanceInfo);//.Entry(posAttendanceInfo).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -831,12 +845,23 @@ namespace POSRepository
             return lstPOSSalesMans;
         }
 
+        public static List<POSBillInfo> GetAllPOSBillInfo(string itemName)
+        {
+            List<POSBillInfo> lstPOSSalesMans = new List<POSBillInfo>();
+
+            lstPOSSalesMans = (from posBill in mDbContext.POSBills.Include("BillItems.PosItem1")
+                               where posBill != null && (posBill.Barcode == itemName || posBill.Id.ToString() == itemName)
+                               select posBill).ToList();
+
+            return lstPOSSalesMans;
+        }
+
         public static List<POSBillInfo> GetAllPOSBillInfo(DateTime fromDate, DateTime toDate)
         {
             List<POSBillInfo> lstPOSSalesMans = new List<POSBillInfo>();
 
             lstPOSSalesMans = (from posBill in mDbContext.POSBills.Include("BillItems.PosItem1")
-                               where posBill != null where posBill.BillCreatedDate >= fromDate && posBill.BillCreatedDate < toDate
+                               where posBill != null && posBill.BillCreatedDate >= fromDate && posBill.BillCreatedDate < toDate
                                select posBill).ToList();
 
             return lstPOSSalesMans;
@@ -898,7 +923,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posBill).State = EntityState.Deleted;
+                mDbContext.POSBills.Remove(posBill);//.Entry(posBill).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -988,7 +1013,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posBillItem).State = EntityState.Deleted;
+                mDbContext.POSBillItems.Remove(posBillItem);//.Entry(posBillItem).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -1010,6 +1035,17 @@ namespace POSRepository
         #endregion POSItems
 
         #region POSRefundInfo
+
+        public static List<POSRefundInfo> GetAllPOSRefundInfo(DateTime fromDate, DateTime toDate, bool refunded)
+        {
+            List<POSRefundInfo> lstPOSSalesMans = new List<POSRefundInfo>();
+
+            lstPOSSalesMans = (from posRefund in mDbContext.POSRefunds
+                               where posRefund != null && posRefund.RefundDate >= fromDate && posRefund.RefundDate < toDate && posRefund.Refunded == refunded
+                               select posRefund).ToList();
+
+            return lstPOSSalesMans;
+        }
 
         public static List<POSRefundInfo> GetAllPOSRefundInfo()
         {
@@ -1079,7 +1115,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(posRefund).State = EntityState.Deleted;
+                mDbContext.POSRefunds.Remove(posRefund);//.Entry(posRefund).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -1170,7 +1206,7 @@ namespace POSRepository
 
             try
             {
-                mDbContext.Entry(systemSettings).State = EntityState.Deleted;
+                mDbContext.SystemSettings.Remove(systemSettings);//.Entry(systemSettings).State = EntityState.Deleted;
 
                 if (saveChanges)
                 {
@@ -1190,6 +1226,105 @@ namespace POSRepository
         }
 
         #endregion POSItems
+
+        #region POSExpenseInfo
+
+        public static List<POSExpenseInfo> GetAllPOSExpenses()
+        {
+            List<POSExpenseInfo> lstPOSExpenses = new List<POSExpenseInfo>();
+
+            lstPOSExpenses = (from pOSItemCategory in mDbContext.POSExpenses
+                                    where pOSItemCategory != null
+                                    select pOSItemCategory).ToList();
+
+            return lstPOSExpenses;
+        }
+
+        public static List<POSExpenseInfo> GetAllPOSExpenses(DateTime fromDate, DateTime toDate)
+        {
+            List<POSExpenseInfo> lstPOSExpenses = new List<POSExpenseInfo>();
+
+            lstPOSExpenses = (from posExpense in mDbContext.POSExpenses
+                              where posExpense != null && posExpense.ExpenseTime >= fromDate && posExpense.ExpenseTime < toDate
+                              select posExpense).ToList();
+
+            return lstPOSExpenses;
+        }
+
+        public static POSStatusCodes AddPOSExpenseInfo(POSExpenseInfo posExpenseInfo, ref string errorMsg, bool saveChanges)
+        {
+            POSStatusCodes status = POSStatusCodes.Failed;
+
+            try
+            {
+                mDbContext.POSExpenses.Add(posExpenseInfo);
+
+                if (saveChanges)
+                {
+                    mDbContext.SaveChanges();
+                }
+
+                status = POSStatusCodes.Success;
+            }
+            catch (Exception e)
+            {
+                RollBack();
+
+                errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+            }
+
+            return status;
+        }
+
+        public static POSStatusCodes UpdatePOSExpenseInfo(POSExpenseInfo posExpenseInfo, ref string errorMsg)
+        {
+            POSStatusCodes status = POSStatusCodes.Failed;
+
+            try
+            {
+                mDbContext.Entry(posExpenseInfo).State = EntityState.Modified;
+
+                mDbContext.SaveChanges();
+
+                status = POSStatusCodes.Success;
+            }
+            catch (Exception e)
+            {
+                RollBack();
+
+                errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+            }
+
+            return status;
+        }
+
+        public static POSStatusCodes DeletePOSExpenseInfo(POSExpenseInfo posExpenseInfo, ref string errorMsg, bool saveChanges = true)
+        {
+            POSStatusCodes status = POSStatusCodes.Failed;
+
+
+            try
+            {
+                mDbContext.POSExpenses.Remove(posExpenseInfo);//.Entry(posItemCategory).State = EntityState.Deleted;
+
+                if (saveChanges)
+                {
+                    mDbContext.SaveChanges();
+                }
+
+                status = POSStatusCodes.Success;
+            }
+            catch (Exception e)
+            {
+                RollBack();
+
+                errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+            }
+
+            return status;
+        }
+
+        #endregion POSExpenseInfo
 
         #region Utility Methods
 

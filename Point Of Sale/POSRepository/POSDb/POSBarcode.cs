@@ -29,6 +29,7 @@ namespace POSRepository.POSDb
 
         public string Pattern { get; set; }
 
+        public string CustomData { get; set; }
 
     }
 }

@@ -18,5 +18,7 @@ namespace POSRepository
         public DateTime TransactionTime { get; set; }
 
         public virtual List<POSItemTransactionItem> Items { get; set; }
+
+        public string CustomData { get; set; }
     }
 }

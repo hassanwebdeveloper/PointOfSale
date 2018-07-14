@@ -27,6 +27,8 @@ namespace POSRepository
 
         public virtual List<POSRefundInfo> Refunds { get; set; }
 
+        public virtual List<POSExpenseInfo> Expenses { get; set; }
+
         public virtual List<POSBillInfo> Bills { get; set; }
 
         public string Password { get; set; }
@@ -60,6 +62,36 @@ namespace POSRepository
         [NotMapped]
         public bool SearchItems { get; set; }
 
+        [NotMapped]
+        public bool ViewInvExpense { get; set; }
+
+        [NotMapped]
+        public bool UpdateInvExpense { get; set; }
+
+        [NotMapped]
+        public bool ViewPosExpense { get; set; }
+
+        [NotMapped]
+        public bool UpdatePosExpense { get; set; }
+
+        [NotMapped]
+        public bool FastRunningReport { get; set; }
+
+        [NotMapped]
+        public bool AccountReport { get; set; }
+
+        [NotMapped]
+        public bool ProfitAndSaleReport { get; set; }
+
+        [NotMapped]
+        public bool EmployeeReport { get; set; }
+
+        [NotMapped]
+        public bool StockReport { get; set; }
+
+        [NotMapped]
+        public bool DailyReport { get; set; }
+
         public void PopulatesRolesBoolean()
         {
             if (string.IsNullOrEmpty(this.Roles))
@@ -76,6 +108,16 @@ namespace POSRepository
             this.CreateBill = this.Roles.Contains("CreateBill");
             this.RefundBill = this.Roles.Contains("RefundBill");
             this.SearchItems = this.Roles.Contains("SearchItem");
+            this.ViewInvExpense = this.Roles.Contains("ViewInvExpense");
+            this.UpdateInvExpense = this.Roles.Contains("UpdateInvExpense");
+            this.ViewPosExpense = this.Roles.Contains("ViewPosExpense");
+            this.UpdatePosExpense = this.Roles.Contains("UpdatePosExpense");
+            this.FastRunningReport = this.Roles.Contains("FastRunningReport");
+            this.AccountReport = this.Roles.Contains("AccountsReport");
+            this.ProfitAndSaleReport = this.Roles.Contains("ProfitAndSaleReport");
+            this.EmployeeReport = this.Roles.Contains("EmployeeReport");
+            this.StockReport = this.Roles.Contains("StockReport");
+            this.DailyReport = this.Roles.Contains("DailyReport");
         }
 
         

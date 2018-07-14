@@ -37,7 +37,17 @@ namespace InventoryManagementSystem
 
             this.tbxItemName.Text = string.Empty;
 
-            this.mItems = POSDbUtility.GetAllPOSItems();
+            try
+            {
+                this.mItems = POSDbUtility.GetAllPOSItems();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                Cursor.Current = current;
+                MessageBox.Show(this, "Some error occured in fetching items.\n\n" + errorMsg);
+            }
+           
 
             this.bsPOSItemInfo.DataSource = null;
             this.bsPOSItemInfo.DataSource = this.mItems;
@@ -58,21 +68,50 @@ namespace InventoryManagementSystem
                 Cursor current = Cursor.Current;
                 Cursor.Current = Cursors.WaitCursor;
 
-                this.mItems = POSDbUtility.GetAllPOSItems();
-                List<POSItemInfo> items = new List<POSItemInfo>();
-                POSItemInfo item = this.mItems.Find(posItem => posItem.Barcode == itemName);
-
-                if (item == null)
+                try
                 {
-                    items = this.mItems.FindAll(posItem => posItem.Name.ToLower().Contains(itemName.ToLower()));
+                    this.mItems = POSDbUtility.GetAllPOSItems();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                    Cursor.Current = current;
+                    MessageBox.Show(this, "Some error occured in fetching items.\n\n" + errorMsg);
+                }
+                
+                List<POSItemInfo> items = new List<POSItemInfo>();
+
+                if (string.IsNullOrEmpty(itemName))
+                {
+                    items = this.mItems;
                 }
                 else
                 {
-                    items.Add(item);
-                }
+                    POSItemInfo item = this.mItems.Find(posItem => posItem.Barcode == itemName);
+
+                    if (item == null)
+                    {
+                        item = this.mItems.Find(posItem => posItem.Id.ToString() == itemName);
+
+                        if (item == null)
+                        {
+                            items = this.mItems.FindAll(posItem => posItem.Name.ToLower().Contains(itemName.ToLower()));
+                        }
+                        else
+                        {
+                            items.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        items.Add(item);
+                    }
+                }                
+
+                this.mItems = items;
 
                 this.bsPOSItemInfo.DataSource = null;
-                this.bsPOSItemInfo.DataSource = items;
+                this.bsPOSItemInfo.DataSource = this.mItems;
 
                 Cursor.Current = current;
             }
@@ -111,30 +150,12 @@ namespace InventoryManagementSystem
             {
                 return;
             }
-
-            string itemName = this.tbxItemName.Text;
-
-            List<POSItemInfo> items = this.mItems;
-
-            if (!string.IsNullOrEmpty(itemName))
-            {
-                POSItemInfo item = this.mItems.Find(posItem => posItem.Barcode == itemName);
-
-                if (item == null)
-                {
-                    items = this.mItems.FindAll(posItem => posItem.Name.Contains(itemName));
-                }
-                else
-                {
-                    items.Add(item);
-                }
-            }
-
-            for (int i = 0; i < items.Count; i++)
+            
+            for (int i = 0; i < this.mItems.Count; i++)
             {
                 DataGridViewRow row = this.dgvPOSItems.Rows[i];
 
-                row.Tag = items[i];
+                row.Tag = this.mItems[i];
             }
         }
 

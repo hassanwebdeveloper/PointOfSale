@@ -3,6 +3,7 @@ using POSRepository;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -17,25 +18,42 @@ namespace Point_Of_Sale
         private List<POSSalesMan> mSalesMans;
         private List<POSGridItemInfo> mItems = new List<POSGridItemInfo>();
         private POSBillInfo mBillInfo = null;
+        private List<POSRefundInfo> mRefunds = null;
+        private object mCellLastValue = null;
 
         public PointOfSaleForm()
         {
             InitializeComponent();
+
+            this.label2.Text = LoginForm.mLoggedInUser.Name + " " + LoginForm.mLoggedInUser.LastName;
 
             PopulateDropDowns();
         }
 
         private void PopulateDropDowns()
         {
-            List<POSSalesMan> salesMans = POSDbUtility.GetAllPOSSalesMan(-1);
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
 
-            this.mSalesMans = salesMans;
+            try
+            {
+                List<POSSalesMan> salesMans = POSDbUtility.GetAllPOSSalesMan(-1);
 
-            List<string> names = (from saleMan in salesMans
-                                  select saleMan.Name).ToList();
+                this.mSalesMans = salesMans;
 
-            this.cbxSalesMans.Items.AddRange(names.ToArray());
+                List<string> names = (from saleMan in salesMans
+                                      select saleMan.Name).ToList();
 
+                this.cbxSalesMans.Items.AddRange(names.ToArray());
+            }
+            catch (Exception e)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in fetching sales man.\n\n" + errorMsg);
+            }
+
+            Cursor.Current = currentCursor;
         }
         
         private void dgvPOSItems_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -63,12 +81,33 @@ namespace Point_Of_Sale
 
             if (search.SelectedItem != null)
             {
-                this.mItems.Add(search.SelectedItem);
+                if (this.mItems.Exists(i => i.Barcode == search.SelectedItem.Barcode))
+                {
+                    POSGridItemInfo gridItem = this.mItems.Find(i => i.Barcode == search.SelectedItem.Barcode);
+
+                    if (gridItem.RemaningQuantity == 0)
+                    {
+                        MessageBox.Show(this, "Searched item stock is finished.");
+                        return;
+                    }
+
+                    gridItem.Quantity += 1;
+                }
+                else
+                {
+                    if (search.SelectedItem.RemaningQuantity == 0)
+                    {
+                        MessageBox.Show(this, "Searched item stock is finished.");
+                        return;
+                    }
+
+                    search.SelectedItem.Quantity += 1;
+
+                    this.mItems.Add(search.SelectedItem);
+                }
 
                 this.bsPOSGridItemInfo.DataSource = null;
-                this.bsPOSGridItemInfo.DataSource = this.mItems;
-
-                
+                this.bsPOSGridItemInfo.DataSource = this.mItems;                
 
                 DataGridViewRow row = this.dgvPOSItems.Rows[this.dgvPOSItems.Rows.Count -1];
                 
@@ -84,6 +123,7 @@ namespace Point_Of_Sale
             int totalPrice = 0;
             int balance = 0;
             int amountPaid = string.IsNullOrEmpty(this.tbxAmountPaid.Text) ? 0 : Convert.ToInt32(this.tbxAmountPaid.Text);
+            int totalItems = 0;
 
             foreach (POSGridItemInfo item in this.mItems)
             {
@@ -93,12 +133,13 @@ namespace Point_Of_Sale
                 }
                 else
                 {
-                    totalDiscount += item.Discount;
+                    totalDiscount += item.TotalDiscount;
                     totalPrice += item.Total;
+                    totalItems += item.Quantity;
                 }
             }
 
-            this.lblItemsCount.Text = this.mItems.Count(gridItem => gridItem.POSItem != null).ToString();
+            this.lblItemsCount.Text = totalItems.ToString();
             this.lblTotalDiscount.Text = totalDiscount.ToString();
             this.lblTotal.Text = (totalPrice).ToString();
             this.lblBalance.Text = amountPaid == 0 ? "0" :(amountPaid - (totalPrice)).ToString();
@@ -127,6 +168,12 @@ namespace Point_Of_Sale
                 e.Cancel = true;
                 return;
             }
+            if (e.ColumnIndex == 3)
+            {
+                DataGridViewRow row = this.dgvPOSItems.Rows[e.RowIndex];
+                object cellValue = row.Cells[e.ColumnIndex].Value;
+                mCellLastValue = cellValue;
+            }
         }
 
         private void dgvPOSItems_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -142,7 +189,17 @@ namespace Point_Of_Sale
 
                 if (e.ColumnIndex == 3)
                 {
-                    itemInfo.Quantity = value;
+                    int remainingQuantity = itemInfo.GetRemaningQuantity(value);
+
+                    if (remainingQuantity < 0)
+                    {
+                        MessageBox.Show(this, "Quantity exceeds the total items in stock.");
+                        row.Cells[3].Value = mCellLastValue;
+                    }
+                    else
+                    {
+                        itemInfo.Quantity = value;
+                    }
                 }
                 else if (e.ColumnIndex == 4)
                 {
@@ -225,7 +282,7 @@ namespace Point_Of_Sale
             
             POSAppUser appUser = LoginForm.mLoggedInUser;
             POSSalesMan salesMan = this.mSalesMans[this.cbxSalesMans.SelectedIndex];
-
+            
             List<POSRefundInfo> refunds = new List<POSRefundInfo>();
             List<POSBillItemInfo> billItems = new List<POSBillItemInfo>();
 
@@ -270,7 +327,12 @@ namespace Point_Of_Sale
                 return POSStatusCodes.Aborted;
             }
 
-            POSBillInfo billInfo = POSFactory.CreateOrUpdatePOSBillInfo(posBill, billItems, refunds, amountPayed, billCanceled, billPayed, appUser, salesMan);
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+
+            this.mRefunds = refunds;
+
+            POSBillInfo billInfo = POSFactory.CreateOrUpdatePOSBillInfo(posBill, billItems, new List<POSRefundInfo>(), amountPayed, billCanceled, billPayed, appUser, salesMan);
             POSStatusCodes status = POSStatusCodes.Failed;
 
             if (posBill == null)
@@ -289,6 +351,7 @@ namespace Point_Of_Sale
                         barcode.Width = 216;
                         barcode.IncludeLabel = true;
 
+                        this.pbxBarcode.Visible = true;
                         this.pbxBarcode.Image = barcode.Encode(TYPE.CODE128, billInfo.Barcode);
                     }
                 }
@@ -307,7 +370,7 @@ namespace Point_Of_Sale
                     int count = this.mBillInfo.BillItems.Count;
                     int i = 0;
 
-                    foreach (POSRefundInfo refund in this.mBillInfo.Refunds)
+                    foreach (POSRefundInfo refund in this.mRefunds)
                     {
                         if (!refund.Refunded)
                         {
@@ -317,6 +380,7 @@ namespace Point_Of_Sale
 
                             if (status != POSStatusCodes.Success)
                             {
+                                Cursor.Current = currentCursor;
                                 MessageBox.Show(this, "Failed to update Refund Info.\n\n" + errorMsg);
                             }
                         }
@@ -332,6 +396,7 @@ namespace Point_Of_Sale
 
                         if (status != POSStatusCodes.Success)
                         {
+                            Cursor.Current = currentCursor;
                             MessageBox.Show(this, "Failed to update total number of sold items.\n\n" + errorMsg);
                         }
 
@@ -346,12 +411,14 @@ namespace Point_Of_Sale
                         barcode.Width = 216;
                         barcode.IncludeLabel = true;
 
+                        this.pbxBarcode.Visible = true;
                         this.pbxBarcode.Image = barcode.Encode(TYPE.CODE128, billInfo.Barcode);
                     }
                 }                
                 
             }
 
+            Cursor.Current = currentCursor;
             return status;
         }
 
@@ -367,6 +434,9 @@ namespace Point_Of_Sale
         {
             if (this.mBillInfo != null)
             {
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+                
                 POSFactory.CreateOrUpdatePOSBillInfo(this.mBillInfo, this.mBillInfo.BillItems, this.mBillInfo.Refunds, this.mBillInfo.AmountPaid, true, false, this.mBillInfo.AppUser, this.mBillInfo.SalesMan);
                 string errorMsg = string.Empty;
 
@@ -374,14 +444,16 @@ namespace Point_Of_Sale
 
                 if (status != POSStatusCodes.Success)
                 {
+                    Cursor.Current = currentCursor;
                     MessageBox.Show(this, "Some error occured in canceling bill.\n\n" + errorMsg);
                 }
+
+                Cursor.Current = currentCursor;
             }
         }
 
         private void btnPayBill_Click(object sender, EventArgs e)
         {
-            var ls = POSDbUtility.GetAllPOSBillInfo();
             int amountPaid = string.IsNullOrEmpty(this.tbxAmountPaid.Text) ? 0 : Convert.ToInt32(this.tbxAmountPaid.Text);
             int balance = string.IsNullOrEmpty(this.lblBalance.Text) ? 0 : Convert.ToInt32(this.lblBalance.Text);
             int totalPrice = string.IsNullOrEmpty(this.lblTotal.Text) ? 0 : Convert.ToInt32(this.lblTotal.Text);
@@ -413,24 +485,35 @@ namespace Point_Of_Sale
                 return;
             }
 
+            string billPrinterName = ConfigurationManager.AppSettings["BillPrinterName"];
+
             //print bill
-            printDocument1.PrinterSettings.PrinterName = "BlackCopper 80mm Series";
+            printDocument1.PrinterSettings.PrinterName = billPrinterName;
             printDocument1.Print();
         }
 
         private void PrintBill(Graphics graphic)
-        {
+        {       
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+               
             try
             {
                 int pixY = 0;
 
-                SystemSettings systemSettings = POSDbUtility.GetAllSystemSettings().FirstOrDefault();
+                List<SystemSettings> settings = POSDbUtility.GetAllSystemSettings();
 
+                SystemSettings systemSettings = null;
+
+                if (settings != null && settings.Count > 0)
+                {
+                    systemSettings = settings.FirstOrDefault();
+                }                
+                
                 if (systemSettings != null)
                 {
-                    POSComonUtility.DrawShopInfo(graphic, systemSettings.ShopName, systemSettings.ShopAddress, systemSettings.ShopContact, ref pixY);
+                    POSComonUtility.DrawShopInfo(graphic, systemSettings.ShopName, systemSettings.ShopAddress, systemSettings.ShopContact, ref pixY, addLogo: true, form:this);
                 }
-
 
                 POSComonUtility.DrawSalesReceiptInfo(graphic, "Sales Receipt", this.mBillInfo.Barcode, this.mBillInfo.BillCreatedDate, this.mBillInfo.AppUser.Name, ref pixY);
 
@@ -472,18 +555,18 @@ namespace Point_Of_Sale
                     }
                 }
 
-                if (this.mBillInfo.Refunds != null && this.mBillInfo.Refunds.Count > 0)
+                if (this.mRefunds != null && this.mRefunds.Count > 0)
                 {
                     POSComonUtility.DrawCategoryRow(graphic, "Refund Slip(s)", ref pixY);
 
-                    foreach (POSRefundInfo refund in this.mBillInfo.Refunds)
+                    foreach (POSRefundInfo refund in this.mRefunds)
                     {
                         POSComonUtility.DrawPOSItemInfo(graphic, refund.Quantity.ToString(), refund.Name, refund.Barcode, refund.Rate.ToString(), refund.Discount.ToString(), refund.Rate.ToString(), ref pixY);
                     }
                 }
 
 
-                POSComonUtility.DrawBillInfo(graphic, "No. of item(s) = " + this.mBillInfo.TotalItems, "Total quantity = " + this.mBillInfo.TotalQuantity, this.mBillInfo.TotalGross.ToString(), this.mBillInfo.TotalDiscount.ToString(), this.mBillInfo.TotalAmount.ToString(), this.mBillInfo.AmountPaid.ToString(), this.mBillInfo.AmountReturned.ToString(), ref pixY);
+                POSComonUtility.DrawBillInfo(graphic, "No. of item(s) = " + this.mBillInfo.TotalItems, "Total quantity = " + this.mBillInfo.TotalQuantity, this.mBillInfo.GetTotalGross(this.mRefunds).ToString(), this.mBillInfo.TotalDiscount.ToString(), this.mBillInfo.GetTotalAmount(this.mRefunds).ToString(), this.mBillInfo.AmountPaid.ToString(), this.mBillInfo.GetAmountReturned(this.mRefunds).ToString(), ref pixY);
 
                 POSComonUtility.DrawBarcode(graphic, this.mBillInfo.Barcode, ref pixY);
 
@@ -493,11 +576,13 @@ namespace Point_Of_Sale
             }
             catch (Exception e)
             {
+                Cursor.Current = currentCursor;
                 string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
 
                 MessageBox.Show(this, "Some error occurred in printing bill./n/n" + errorMsg);
             }
 
+            Cursor.Current = currentCursor;
             this.Close();
             
         }
@@ -527,31 +612,46 @@ namespace Point_Of_Sale
                 return;
             }
 
-            POSGridItemInfo itemInfo = searchedItems[0];
+            POSGridItemInfo itemInfo = searchedItems[0];            
 
-            if (itemInfo.RemaningQuantity == 0)
+            if (this.mItems.Exists(i => i.Barcode == itemInfo.Barcode))
             {
-                MessageBox.Show(this, "Searched item stock is finished.");
+                POSGridItemInfo gridItem = this.mItems.Find(i => i.Barcode == itemInfo.Barcode);
+
+                if (gridItem.RemaningQuantity == 0)
+                {
+                    MessageBox.Show(this, "Searched item stock is finished.");
+                    return;
+                }
+
+                gridItem.Quantity += 1;
             }
             else
             {
+                if (itemInfo.POSRefund == null)
+                {
+                    if (itemInfo.RemaningQuantity == 0)
+                    {
+                        MessageBox.Show(this, "Searched item stock is finished.");
+                        return;
+                    }
+                }                
+
                 itemInfo.Quantity += 1;
 
-                this.mItems.AddRange(searchedItems);
-
-                this.bsPOSGridItemInfo.DataSource = null;
-                this.bsPOSGridItemInfo.DataSource = this.mItems;
-
-
-
-                DataGridViewRow row = this.dgvPOSItems.Rows[this.dgvPOSItems.Rows.Count - 1];
-
-                this.dgvPOSItems.ClearSelection();
-                row.Selected = true;
-                this.UpdateBillInfo();
+                this.mItems.Add(itemInfo);
             }
 
-            
+            this.bsPOSGridItemInfo.DataSource = null;
+            this.bsPOSGridItemInfo.DataSource = this.mItems;
+
+            DataGridViewRow row = this.dgvPOSItems.Rows[this.dgvPOSItems.Rows.Count - 1];
+
+            this.dgvPOSItems.ClearSelection();
+            row.Selected = true;
+            this.UpdateBillInfo();
+
+
         }
 
 
@@ -566,11 +666,39 @@ namespace Point_Of_Sale
             {
                 bool deleted = this.mItems.Remove(deletingItem);
 
-                if (deleted)
-                {
-                    this.UpdateBillInfo();
-                }
+                this.UpdateBillInfo();
             }            
+        }
+
+        private void dgvPOSItems_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            DialogResult result = MessageBox.Show(this, "Are you sure you want to remove this item from bill?", "Confirmation Dialog", MessageBoxButtons.YesNo);
+
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void dgvPOSItems_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            e.Control.KeyPress -= new KeyPressEventHandler(NumericColumn_KeyPress);
+            if (this.dgvPOSItems.CurrentCell.ColumnIndex == 3 || this.dgvPOSItems.CurrentCell.ColumnIndex == 4) //Desired Column
+            {
+                TextBox tb = e.Control as TextBox;
+                if (tb != null)
+                {
+                    tb.KeyPress += new KeyPressEventHandler(NumericColumn_KeyPress);
+                }
+            }
+        }
+
+        private void NumericColumn_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !POSComonUtility.IsDigitsOnly(e.KeyChar.ToString()))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

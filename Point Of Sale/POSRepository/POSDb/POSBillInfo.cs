@@ -25,6 +25,10 @@ namespace POSRepository
 
         public bool BillPayed { get; set; }
 
+        public POSBillPaymentMethod PaymentMethod { get; set; }
+
+        public string CardId { get; set; }
+
         [ForeignKey("AppUser")]
         public virtual int? AppUserId { get; set; }
 
@@ -35,14 +39,26 @@ namespace POSRepository
 
         public virtual POSSalesMan SalesMan { get; set; }
 
-        public virtual List<POSRefundInfo> Refunds { get; set; }
+        public virtual List<POSRefundInfo> Refunds { get; set; }        
+
+        public string CustomData { get; set; }
 
         [NotMapped]
         public string Barcode
         {
             get
             {
-                return "Bill" + this.Id;
+                string barCode = Convert.ToString(this.Id);
+
+                if (barCode.Length < 8)
+                {
+                    for (int i = barCode.Length; i < 8; i++)
+                    {
+                        barCode = "0" + barCode;
+                    }
+                }
+
+                return "Bill" + barCode;
             }
         }
 
@@ -62,10 +78,13 @@ namespace POSRepository
             {
                 int totalQuantity = 0;
 
-                foreach (POSBillItemInfo item in this.BillItems)
+                if (this.BillItems != null)
                 {
-                    totalQuantity += item.Quantity;
-                }
+                    foreach (POSBillItemInfo item in this.BillItems)
+                    {
+                        totalQuantity += item.Quantity;
+                    }
+                }                
 
                 return totalQuantity;
             }
@@ -78,61 +97,72 @@ namespace POSRepository
             {
                 int totalDiscount = 0;
 
-                foreach (POSBillItemInfo item in this.BillItems)
+                if (this.BillItems != null)
                 {
-                    totalDiscount += item.Discount;
-                }
+                    foreach (POSBillItemInfo item in this.BillItems)
+                    {
+                        totalDiscount += (item.Discount * item.Quantity);
+                    }
+                }                
 
                 return totalDiscount;
             }
         }
+        
 
-        [NotMapped]
-        public int TotalAmount
+        public int GetTotalAmount(List<POSRefundInfo> refunds)
         {
-            get
-            {
-                int totalAmount = 0;
+            int totalAmount = 0;
 
+            if (this.BillItems != null)
+            {
                 foreach (POSBillItemInfo item in this.BillItems)
                 {
                     totalAmount += item.Total;
                 }
+            }
 
-                foreach (POSRefundInfo refund in this.Refunds)
+            if (refunds != null)
+            {
+                foreach (POSRefundInfo refund in refunds)
                 {
                     totalAmount += refund.Rate;
                 }
-
-                return totalAmount;
             }
+
+
+            return totalAmount;
         }
 
-        [NotMapped]
-        public int TotalGross
+        public int GetTotalGross(List<POSRefundInfo> refunds)
         {
-            get
-            {
-                int totalGross = 0;
+            int totalGross = 0;
 
+            if (this.BillItems != null)
+            {
                 foreach (POSBillItemInfo item in this.BillItems)
                 {
                     totalGross += item.TotalGross;
                 }
-
-                return totalGross;
             }
-        }
 
-        [NotMapped]
-        public int AmountReturned
-        {
-            get
+            if (refunds != null)
             {
-                int totalreturn = this.AmountPaid - this.TotalAmount;                
-
-                return totalreturn;
+                foreach (POSRefundInfo item in refunds)
+                {
+                    totalGross += item.Rate;
+                }
             }
+
+            return totalGross;
+        }
+        
+
+        public int GetAmountReturned(List<POSRefundInfo> refunds)
+        {
+            int totalreturn = this.AmountPaid - this.GetTotalAmount(refunds);
+
+            return totalreturn;
         }
 
         [NotMapped]

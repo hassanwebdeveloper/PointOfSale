@@ -27,7 +27,7 @@ namespace POSReports
 
                         for (int i = 0; i < reportConfig.Columns.Count; i++)
                         {
-                            work.Column(i).Width = reportConfig.Columns[i].Width;
+                            work.Column(i + 2).Width = reportConfig.Columns[i].Width;
                         }
 
                         //work.Column(1).Width = 20;
@@ -70,12 +70,34 @@ namespace POSReports
                         {
                             POSReportMetaInfo metaInfo = reportConfig.MetaInfo[i];
 
+                            if (metaInfo.LabelColSpan < 0)
+                            {
+                                metaInfo.LabelColSpan = 0;
+                            }
+
+                            if (metaInfo.ValueColSpan < 0)
+                            {
+                                metaInfo.ValueColSpan = 1;
+                            }
+
                             work.Cells[row, 2].Style.Font.Bold = true;
-                            work.Cells[row, 2, row, 2 + metaInfo.ColSpan].Style.Font.Color.SetColor(reportConfig.FontColor);
-                            work.Cells[row, 2, row, 2 + metaInfo.ColSpan].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-                            work.Cells[row, 2, row, 2 + metaInfo.ColSpan].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                            work.Cells[row, 2].Value = metaInfo.Label;
-                            work.Cells[row, 2 + metaInfo.ColSpan].Value = metaInfo.Value;
+                            work.Cells[row, 2].Style.Font.Color.SetColor(reportConfig.FontColor);
+                            work.Cells[row, 2, row, 2 + metaInfo.ValueColSpan + metaInfo.LabelColSpan].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                            work.Cells[row, 2, row, 2 + metaInfo.ValueColSpan + metaInfo.LabelColSpan].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+
+                            if (metaInfo.LabelColSpan > 0)
+                            {
+                                work.Cells[row, 2, row, 2 + metaInfo.LabelColSpan].Merge = true;
+                            }
+
+                            work.Cells[row, 2, row, 2 + metaInfo.LabelColSpan].Value = metaInfo.Label;
+
+                            if (metaInfo.ValueColSpan > 0)
+                            {
+                                work.Cells[row, 2 + metaInfo.ValueColSpan + metaInfo.LabelColSpan].Merge = true;
+                            }
+
+                            work.Cells[row, 2 + metaInfo.ValueColSpan + metaInfo.LabelColSpan].Value = metaInfo.Value;
                             work.Row(row).Height = metaInfo.RowHeight;
 
                             row++;
@@ -139,26 +161,26 @@ namespace POSReports
                         //    row++;
                         int columnsCount = reportConfig.Columns.Count;
 
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
 
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Top.Color.SetColor(reportConfig.HeaderBorderColor);
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Bottom.Color.SetColor(reportConfig.HeaderBorderColor);
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Left.Color.SetColor(reportConfig.HeaderBorderColor);
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Right.Color.SetColor(reportConfig.HeaderBorderColor);
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Top.Color.SetColor(reportConfig.HeaderBorderColor);
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Bottom.Color.SetColor(reportConfig.HeaderBorderColor);
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Left.Color.SetColor(reportConfig.HeaderBorderColor);
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Right.Color.SetColor(reportConfig.HeaderBorderColor);
 
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.Fill.BackgroundColor.SetColor(reportConfig.HeaderColor);
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-                        work.Cells[row, 2, row, 2 + columnsCount].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.Fill.BackgroundColor.SetColor(reportConfig.HeaderColor);
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        work.Cells[row, 2, row, 1 + columnsCount].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
-                        for (int i = 2; i < columnsCount + 2; i++)
+                        for (int i = 0; i < columnsCount; i++)
                         {
                             POSReportColumn column = reportConfig.Columns[i];
 
-                            work.Cells[row, i].Value = column.Name;
+                            work.Cells[row, i + 2].Value = column.Name;
                         }
 
                         work.Row(row).Height = reportConfig.HeaderRowHeight;
@@ -193,27 +215,27 @@ namespace POSReports
                         {
                             POSReportData data = reportConfig.Data[i];
                             row++;
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
 
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Top.Color.SetColor(reportConfig.BorderColor);
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Bottom.Color.SetColor(reportConfig.BorderColor);
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Left.Color.SetColor(reportConfig.BorderColor);
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.Border.Right.Color.SetColor(reportConfig.BorderColor);
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Top.Color.SetColor(reportConfig.BorderColor);
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Bottom.Color.SetColor(reportConfig.BorderColor);
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Left.Color.SetColor(reportConfig.BorderColor);
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.Border.Right.Color.SetColor(reportConfig.BorderColor);
 
                             if (i % 2 == 0)
                             {
-                                work.Cells[row, 2, row, 2 + columnsCount].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                work.Cells[row, 2, row, 2 + columnsCount].Style.Fill.BackgroundColor.SetColor(reportConfig.AltColor);
+                                work.Cells[row, 2, row, 1 + columnsCount].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                work.Cells[row, 2, row, 1 + columnsCount].Style.Fill.BackgroundColor.SetColor(reportConfig.AltColor);
                             }
 
-                            work.Cells[row, 2, row, 2 + columnsCount].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                            work.Cells[row, 2, row, 1 + columnsCount].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                             //work.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                             //work.Cells[row, 3].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
 
-                            for (int j = 0; j < columnsCount; i++)
+                            for (int j = 0; j < columnsCount; j++)
                             {
                                 work.Cells[row, j + 2].Value = data.Values[j];
                             }

@@ -39,6 +39,8 @@ namespace POSRepository
 
         public virtual List<POSAttendanceInfo> Attendance { get; set; }
 
+        public string CustomData { get; set; }
+
         [NotMapped]
         public string Barcode
         {

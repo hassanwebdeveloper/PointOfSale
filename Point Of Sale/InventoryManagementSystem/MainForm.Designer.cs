@@ -33,6 +33,7 @@
             this.btnPrintBarcode = new System.Windows.Forms.Button();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnManageExpense = new System.Windows.Forms.Button();
             this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,7 +91,7 @@
             this.panel7.Controls.Add(this.label7);
             this.panel7.Location = new System.Drawing.Point(-1, -1);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(531, 53);
+            this.panel7.Size = new System.Drawing.Size(699, 53);
             this.panel7.TabIndex = 30;
             // 
             // label7
@@ -104,12 +105,29 @@
             this.label7.TabIndex = 34;
             this.label7.Text = "Inventory";
             // 
+            // btnManageExpense
+            // 
+            this.btnManageExpense.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
+            this.btnManageExpense.FlatAppearance.BorderSize = 2;
+            this.btnManageExpense.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnManageExpense.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnManageExpense.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnManageExpense.ForeColor = System.Drawing.Color.Navy;
+            this.btnManageExpense.Location = new System.Drawing.Point(528, 84);
+            this.btnManageExpense.Name = "btnManageExpense";
+            this.btnManageExpense.Size = new System.Drawing.Size(154, 48);
+            this.btnManageExpense.TabIndex = 31;
+            this.btnManageExpense.Text = "Manage &Expenses";
+            this.btnManageExpense.UseVisualStyleBackColor = true;
+            this.btnManageExpense.Click += new System.EventHandler(this.btnManageExpense_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(529, 166);
+            this.ClientSize = new System.Drawing.Size(695, 166);
+            this.Controls.Add(this.btnManageExpense);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.btnPrintBarcode);
             this.Controls.Add(this.btnManageVendors);
@@ -133,6 +151,7 @@
         private System.Windows.Forms.Button btnPrintBarcode;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnManageExpense;
     }
 }
 

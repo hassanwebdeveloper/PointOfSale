@@ -218,6 +218,7 @@
             this.dgvSalesMan.RowHeadersVisible = false;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgvSalesMan.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvSalesMan.RowTemplate.Height = 25;
             this.dgvSalesMan.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvSalesMan.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSalesMan.Size = new System.Drawing.Size(1091, 323);

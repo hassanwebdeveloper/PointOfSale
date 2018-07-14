@@ -29,5 +29,7 @@ namespace POSRepository
         public VendorInfo Vendor { get; set; }
 
         public virtual List<POSItemInfo> Items { get; set; }
+
+        public string CustomData { get; set; }
     }
 }

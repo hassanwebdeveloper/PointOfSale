@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace InventoryManagementSystem
 
         private void dgvPOSItems_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            if (this.dgvPOSItems.Rows.Count == 0 || this.mItems == null)
+            if (this.dgvPOSItems.Rows == null || this.dgvPOSItems.Rows.Count == 0 || this.mItems == null)
             {
                 return;
             }
@@ -43,77 +44,101 @@ namespace InventoryManagementSystem
             if (this.dgvPOSItems.Rows == null || this.dgvPOSItems.Rows.Count == 0)
             {
                 MessageBox.Show(this, "Please add any item to print barcode.");
+                return;
             }
 
-            SystemSettings systemSettings = POSDbUtility.GetAllSystemSettings().FirstOrDefault();
+            Cursor currentCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
 
-            string shopName = string.Empty;
-
-            if (systemSettings != null)
+            try
             {
-                shopName = systemSettings.ShopName;
-            }
+                List<SystemSettings> settings = POSDbUtility.GetAllSystemSettings();
 
-            List<POSItemInfo> itemsToPrint = new List<POSItemInfo>();
+                SystemSettings systemSettings = null;
 
-            foreach (DataGridViewRow row in this.dgvPOSItems.Rows)
-            {
-                if (row != null && row.Tag is POSItemInfo)
+                if (settings != null && settings.Count > 0)
                 {
-                    if (string.IsNullOrEmpty(row.Cells[3].Value as string))
-                    {
-                        continue;
-                    }
+                    systemSettings = settings.FirstOrDefault();
+                }                
 
-                    int count = Convert.ToInt32(row.Cells[3].Value);
-                    POSItemInfo item = row.Tag as POSItemInfo;
+                string shopName = string.Empty;
 
-                    for (int i = 0; i < count; i++)
+                if (systemSettings != null)
+                {
+                    shopName = systemSettings.ShopName;
+                }
+
+                List<POSItemInfo> itemsToPrint = new List<POSItemInfo>();
+
+                foreach (DataGridViewRow row in this.dgvPOSItems.Rows)
+                {
+                    if (row != null && row.Tag is POSItemInfo)
                     {
-                        itemsToPrint.Add(item);
+                        if (string.IsNullOrEmpty(row.Cells[3].Value as string))
+                        {
+                            continue;
+                        }
+
+                        int count = Convert.ToInt32(row.Cells[3].Value);
+                        POSItemInfo item = row.Tag as POSItemInfo;
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            itemsToPrint.Add(item);
+                        }
                     }
                 }
+
+                string barcodePrinter = ConfigurationManager.AppSettings["BarcodePrinter"];
+
+                TSCLIB_DLL.openport(barcodePrinter);                         //Open specified printer driver
+
+                TSCLIB_DLL.setup("107", "25", "2", "8", "0", "2.5", "0");       //Setup the media size and sensor type info
+
+                TSCLIB_DLL.clearbuffer();                                       //Clear image buffer
+
+                bool portOpened = true;
+
+                for (int i = 0; i < itemsToPrint.Count; i++)
+                {
+                    if (portOpened)
+                    {
+                        portOpened = false;
+                    }
+                    else
+                    {
+                        TSCLIB_DLL.openport(barcodePrinter);
+                        TSCLIB_DLL.clearbuffer();
+                    }
+                    POSItemInfo firstItem = itemsToPrint[i++];
+                    POSItemInfo secondItem = null;
+
+                    if (i < itemsToPrint.Count)
+                    {
+                        secondItem = itemsToPrint[i];
+                    }
+                    else
+                    {
+                        secondItem = firstItem;
+                    }
+
+                    this.AddLeftBarCode(shopName, firstItem.Barcode, firstItem.Name, "Rs. " + firstItem.SellingPrice);
+                    this.AddRightBarCode(shopName, secondItem.Barcode, secondItem.Name, "Rs. " + secondItem.SellingPrice);
+
+                    TSCLIB_DLL.printlabel("1", "1");
+                    TSCLIB_DLL.closeport();
+                }
             }
+            catch (Exception ex)
+            {
+                string errorMsg = POSComonUtility.GetInnerExceptionMessage(ex);
+                Cursor.Current = currentCursor;
+                MessageBox.Show(this, "Some error occured in Printing Barcodes.\n\n" + errorMsg);
+            }
+
+            Cursor.Current = currentCursor;
 
             
-
-            TSCLIB_DLL.openport("TSC TTP-244 Pro");                         //Open specified printer driver
-
-            TSCLIB_DLL.setup("107", "25", "2", "8", "0", "2.5", "0");       //Setup the media size and sensor type info
-
-            TSCLIB_DLL.clearbuffer();                                       //Clear image buffer
-
-            bool portOpened = true;
-
-            for (int i = 0; i < itemsToPrint.Count; i++)
-            {
-                if (portOpened)
-                {
-                    portOpened = false;
-                }
-                else
-                {
-                    TSCLIB_DLL.openport("TSC TTP-244 Pro");
-                    TSCLIB_DLL.clearbuffer();
-                }
-                POSItemInfo firstItem = itemsToPrint[i++];
-                POSItemInfo secondItem = null;
-
-                if (i < itemsToPrint.Count)
-                {
-                    secondItem = itemsToPrint[i];
-                }
-                else
-                {
-                    secondItem = firstItem;
-                }
-
-                this.AddLeftBarCode(shopName, firstItem.Barcode, firstItem.Name, "Rs. " + firstItem.SellingPrice);
-                this.AddRightBarCode(shopName, secondItem.Barcode, secondItem.Name, "Rs. " + secondItem.SellingPrice);
-
-                TSCLIB_DLL.printlabel("1", "1");
-                TSCLIB_DLL.closeport();
-            }
         }
 
         private void AddLeftBarCode(string shopName,string strBarCode, string itemName, string price)
@@ -164,10 +189,51 @@ namespace InventoryManagementSystem
 
             if (items != null)
             {
-                this.mItems.AddRange(items.FindAll(i=> !this.mItems.Exists(it=> it.Id == i.Id)));
+                Dictionary<int, int> printCounts = new Dictionary<int, int>();
+
+                foreach (DataGridViewRow row in this.dgvPOSItems.Rows)
+                {
+                    if (row != null && row.Tag is POSItemInfo && row.Cells[3].Value != null)
+                    {
+                        int id = (row.Tag as POSItemInfo).Id;
+                        int count = Convert.ToInt32(row.Cells[3].Value);
+
+                        if (items.Exists(i=>i.Id == id))
+                        {
+                            count++;
+                        }
+
+                        printCounts.Add(id, count);
+                    }
+                }
+
+                List<POSItemInfo> filteredItems = items.FindAll(i => !this.mItems.Exists(it => it.Id == i.Id));
+
+                if (filteredItems == null)
+                {
+                    filteredItems = new List<POSItemInfo>();
+                }
+
+                this.mItems.AddRange(filteredItems);
 
                 this.bsPOSItemInfo.DataSource = null;
                 this.bsPOSItemInfo.DataSource = this.mItems;
+
+                foreach (DataGridViewRow row in this.dgvPOSItems.Rows)
+                {
+                    if (row != null && row.Tag is POSItemInfo)
+                    {
+                        int id = (row.Tag as POSItemInfo).Id;
+
+                        if (printCounts.ContainsKey(id))
+                        {
+                            int count = printCounts[id];
+
+                            row.Cells[3].Value = count;
+                        }
+                        
+                    }
+                }
             }
         }
 
@@ -190,19 +256,28 @@ namespace InventoryManagementSystem
 
         private void dgvPOSItems_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            //List<POSItemInfo> items = new List<POSItemInfo>();
-
-            //foreach (DataGridViewRow row in this.dgvPOSItems.Rows)
-            //{
-            //    if (row != null && row.Tag is POSItemInfo)
-            //    {
-            //        POSItemInfo item = row.Tag as POSItemInfo;
-
-            //        items.Add(item);
-            //    }
-            //}
             
-            //this.mItems = items;
+        }
+
+        private void dgvPOSItems_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            e.Control.KeyPress -= new KeyPressEventHandler(NumericColumn_KeyPress);
+            if (this.dgvPOSItems.CurrentCell.ColumnIndex == 3) //Desired Column
+            {
+                TextBox tb = e.Control as TextBox;
+                if (tb != null)
+                {
+                    tb.KeyPress += new KeyPressEventHandler(NumericColumn_KeyPress);
+                }
+            }
+        }
+
+        private void NumericColumn_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !POSComonUtility.IsDigitsOnly(e.KeyChar.ToString()))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

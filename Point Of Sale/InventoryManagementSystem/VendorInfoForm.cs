@@ -34,13 +34,8 @@ namespace InventoryManagementSystem
             this.tbxAddress.Text = this.mVendorInfo.Address;
             this.tbxContactNumber.Text = this.mVendorInfo.ContactNumber;
             this.tbxCellPhone.Text = this.mVendorInfo.CellPhoneNumber;
-
-            //if (this.mVendorInfo.Representatives != null)
-            //{
-            //    this.representativeInfoBindingSource.DataSource = this.mVendorInfo.Representatives;
-            //}
-
-            this.btnSave.Text = "Update Vendor";
+            
+            this.btnSave.Text = "&Update Vendor";
             this.btnSave.Tag = true;
 
         }
@@ -52,6 +47,9 @@ namespace InventoryManagementSystem
 
             if (isValid)
             {
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+            
                 bool saved = Convert.ToBoolean(this.btnSave.Tag);
                 if (saved)
                 {
@@ -68,6 +66,7 @@ namespace InventoryManagementSystem
                     }
                     else
                     {
+                        Cursor.Current = currentCursor;
                         MessageBox.Show(this, "Some error occured in updating vendor.\n\n" + errorMsg);
                     }
                 }
@@ -75,15 +74,13 @@ namespace InventoryManagementSystem
                 {
 
                     VendorInfo vendor = POSFactory.CreateVendor(this.tbxName.Text, this.tbxAddress.Text, this.tbxContactNumber.Text, this.tbxCellPhone.Text);
-                    
-                    //RepresentativeInfo representative = POSComonUtility.CreateRepresentative(this.tbxName.Text, this.tbxAddress.Text, this.tbxContactNumber.Text, "Sales Man", vendor);
-                    
+                                        
                     POSStatusCodes status = POSDbUtility.AddVendor(vendor, ref errorMsg);
 
                     if (status == POSStatusCodes.Success)
                     {
                         this.mVendorInfo = vendor;
-                        this.btnSave.Text = "Update Vendor";
+                        this.btnSave.Text = "&Update Vendor";
                         this.btnSave.Tag = true;
 
                         this.btnAddNew.Enabled = true;
@@ -92,9 +89,12 @@ namespace InventoryManagementSystem
                     }
                     else
                     {
+                        Cursor.Current = currentCursor;
                         MessageBox.Show(this, "Some error occured in adding vendor.\n\n" + errorMsg);
                     }
                 }
+
+                Cursor.Current = currentCursor;
             }
         }
 

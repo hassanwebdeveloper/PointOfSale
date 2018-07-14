@@ -28,18 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dgvRefundTermsAndCondition = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bsRefundTermsAndConditions = new System.Windows.Forms.BindingSource(this.components);
             this.label6 = new System.Windows.Forms.Label();
             this.tbxThanksNote = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.dgvBillTermsAndConditions = new System.Windows.Forms.DataGridView();
-            this.Condition = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bsBillTermsAndConditions = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.tbxShopContact = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -51,9 +52,13 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
+            this.Condition = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRefundTermsAndCondition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsRefundTermsAndConditions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBillTermsAndConditions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsBillTermsAndConditions)).BeginInit();
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
             this.SuspendLayout();
@@ -83,6 +88,7 @@
             // 
             // dgvRefundTermsAndCondition
             // 
+            this.dgvRefundTermsAndCondition.AutoGenerateColumns = false;
             this.dgvRefundTermsAndCondition.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
@@ -95,9 +101,10 @@
             this.dgvRefundTermsAndCondition.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRefundTermsAndCondition.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1});
+            this.dgvRefundTermsAndCondition.DataSource = this.bsRefundTermsAndConditions;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Navy;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Navy;
@@ -105,14 +112,13 @@
             this.dgvRefundTermsAndCondition.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvRefundTermsAndCondition.Location = new System.Drawing.Point(684, 98);
             this.dgvRefundTermsAndCondition.Name = "dgvRefundTermsAndCondition";
+            this.dgvRefundTermsAndCondition.RowTemplate.Height = 25;
             this.dgvRefundTermsAndCondition.Size = new System.Drawing.Size(263, 150);
             this.dgvRefundTermsAndCondition.TabIndex = 81;
             // 
-            // dataGridViewTextBoxColumn1
+            // bsRefundTermsAndConditions
             // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "Terms and Conditions";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 220;
+            this.bsRefundTermsAndConditions.DataSource = typeof(POSAdminPanel.BillTermsAndConditions);
             // 
             // label6
             // 
@@ -132,7 +138,6 @@
             this.tbxThanksNote.Name = "tbxThanksNote";
             this.tbxThanksNote.Size = new System.Drawing.Size(263, 29);
             this.tbxThanksNote.TabIndex = 79;
-            this.tbxThanksNote.UseSystemPasswordChar = true;
             // 
             // label2
             // 
@@ -146,6 +151,7 @@
             // 
             // dgvBillTermsAndConditions
             // 
+            this.dgvBillTermsAndConditions.AutoGenerateColumns = false;
             this.dgvBillTermsAndConditions.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
@@ -158,9 +164,10 @@
             this.dgvBillTermsAndConditions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvBillTermsAndConditions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Condition});
+            this.dgvBillTermsAndConditions.DataSource = this.bsBillTermsAndConditions;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Navy;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Navy;
@@ -168,14 +175,13 @@
             this.dgvBillTermsAndConditions.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvBillTermsAndConditions.Location = new System.Drawing.Point(198, 98);
             this.dgvBillTermsAndConditions.Name = "dgvBillTermsAndConditions";
+            this.dgvBillTermsAndConditions.RowTemplate.Height = 25;
             this.dgvBillTermsAndConditions.Size = new System.Drawing.Size(263, 150);
             this.dgvBillTermsAndConditions.TabIndex = 77;
             // 
-            // Condition
+            // bsBillTermsAndConditions
             // 
-            this.Condition.HeaderText = "Terms and Conditions";
-            this.Condition.Name = "Condition";
-            this.Condition.Width = 220;
+            this.bsBillTermsAndConditions.DataSource = typeof(POSAdminPanel.BillTermsAndConditions);
             // 
             // label1
             // 
@@ -290,6 +296,20 @@
             this.label8.TabIndex = 34;
             this.label8.Text = "Admin Panel";
             // 
+            // Condition
+            // 
+            this.Condition.DataPropertyName = "Condition";
+            this.Condition.HeaderText = "Terms and Conditions";
+            this.Condition.Name = "Condition";
+            this.Condition.Width = 220;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Condition";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Terms and Conditions";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 220;
+            // 
             // SetSystemSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -306,7 +326,9 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRefundTermsAndCondition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsRefundTermsAndConditions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBillTermsAndConditions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsBillTermsAndConditions)).EndInit();
             this.panel6.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
@@ -327,13 +349,15 @@
         private System.Windows.Forms.TextBox tbxThanksNote;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dgvBillTermsAndConditions;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Condition;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dgvRefundTermsAndCondition;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.BindingSource bsRefundTermsAndConditions;
+        private System.Windows.Forms.BindingSource bsBillTermsAndConditions;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Condition;
     }
 }

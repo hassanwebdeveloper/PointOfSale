@@ -26,7 +26,9 @@ namespace POSRepository
         public POSBillItemInfo BillItemInfo { get; set; }
 
         public int Quantity { get; set; }
-        
+
+        public string CustomData { get; set; }
+
         [NotMapped]
         public int Total
         {

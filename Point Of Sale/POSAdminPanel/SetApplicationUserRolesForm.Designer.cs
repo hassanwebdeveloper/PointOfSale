@@ -1,6 +1,6 @@
 ﻿namespace POSAdminPanel
 {
-    partial class SetApplicationUserRolesForm
+    partial class SetApplicationUserRoles
     {
         /// <summary>
         /// Required designer variable.
@@ -28,12 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MainGroupBox = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.chxDailyReport = new System.Windows.Forms.CheckBox();
+            this.chxStockReport = new System.Windows.Forms.CheckBox();
+            this.chxEmployeeReport = new System.Windows.Forms.CheckBox();
+            this.chxProfitAndSale = new System.Windows.Forms.CheckBox();
+            this.chxAccountsReport = new System.Windows.Forms.CheckBox();
+            this.chxFastRunningReport = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.chxUpdatePosExpenses = new System.Windows.Forms.CheckBox();
+            this.chxViewPosExpenses = new System.Windows.Forms.CheckBox();
             this.chxSearchItems = new System.Windows.Forms.CheckBox();
             this.chxRefundBill = new System.Windows.Forms.CheckBox();
             this.chxCreateBill = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chxUpdateInvExpenses = new System.Windows.Forms.CheckBox();
+            this.chxViewInvExpenses = new System.Windows.Forms.CheckBox();
             this.chxPrintBarcode = new System.Windows.Forms.CheckBox();
             this.chxUpdateVendors = new System.Windows.Forms.CheckBox();
             this.chxViewVendors = new System.Windows.Forms.CheckBox();
@@ -44,40 +55,141 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.groupBox1.SuspendLayout();
+            this.MainGroupBox.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // MainGroupBox
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.White;
-            this.groupBox1.Controls.Add(this.groupBox3);
-            this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Controls.Add(this.chxAdmin);
-            this.groupBox1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.ForeColor = System.Drawing.Color.Navy;
-            this.groupBox1.Location = new System.Drawing.Point(11, 63);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(505, 322);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Roles";
+            this.MainGroupBox.BackColor = System.Drawing.Color.White;
+            this.MainGroupBox.Controls.Add(this.groupBox4);
+            this.MainGroupBox.Controls.Add(this.groupBox3);
+            this.MainGroupBox.Controls.Add(this.groupBox2);
+            this.MainGroupBox.Controls.Add(this.chxAdmin);
+            this.MainGroupBox.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MainGroupBox.ForeColor = System.Drawing.Color.Navy;
+            this.MainGroupBox.Location = new System.Drawing.Point(11, 63);
+            this.MainGroupBox.Name = "MainGroupBox";
+            this.MainGroupBox.Size = new System.Drawing.Size(949, 322);
+            this.MainGroupBox.TabIndex = 0;
+            this.MainGroupBox.TabStop = false;
+            this.MainGroupBox.Text = "Roles";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.chxDailyReport);
+            this.groupBox4.Controls.Add(this.chxStockReport);
+            this.groupBox4.Controls.Add(this.chxEmployeeReport);
+            this.groupBox4.Controls.Add(this.chxProfitAndSale);
+            this.groupBox4.Controls.Add(this.chxAccountsReport);
+            this.groupBox4.Controls.Add(this.chxFastRunningReport);
+            this.groupBox4.ForeColor = System.Drawing.Color.Navy;
+            this.groupBox4.Location = new System.Drawing.Point(600, 79);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(341, 237);
+            this.groupBox4.TabIndex = 9;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Reports Roles";
+            // 
+            // chxDailyReport
+            // 
+            this.chxDailyReport.AutoSize = true;
+            this.chxDailyReport.Location = new System.Drawing.Point(199, 28);
+            this.chxDailyReport.Name = "chxDailyReport";
+            this.chxDailyReport.Size = new System.Drawing.Size(119, 25);
+            this.chxDailyReport.TabIndex = 7;
+            this.chxDailyReport.Text = "Daily Report";
+            this.chxDailyReport.UseVisualStyleBackColor = true;
+            // 
+            // chxStockReport
+            // 
+            this.chxStockReport.AutoSize = true;
+            this.chxStockReport.Location = new System.Drawing.Point(6, 195);
+            this.chxStockReport.Name = "chxStockReport";
+            this.chxStockReport.Size = new System.Drawing.Size(125, 25);
+            this.chxStockReport.TabIndex = 6;
+            this.chxStockReport.Text = "Stock Report";
+            this.chxStockReport.UseVisualStyleBackColor = true;
+            // 
+            // chxEmployeeReport
+            // 
+            this.chxEmployeeReport.AutoSize = true;
+            this.chxEmployeeReport.Location = new System.Drawing.Point(6, 155);
+            this.chxEmployeeReport.Name = "chxEmployeeReport";
+            this.chxEmployeeReport.Size = new System.Drawing.Size(156, 25);
+            this.chxEmployeeReport.TabIndex = 5;
+            this.chxEmployeeReport.Text = "Employee Report";
+            this.chxEmployeeReport.UseVisualStyleBackColor = true;
+            // 
+            // chxProfitAndSale
+            // 
+            this.chxProfitAndSale.AutoSize = true;
+            this.chxProfitAndSale.Location = new System.Drawing.Point(6, 112);
+            this.chxProfitAndSale.Name = "chxProfitAndSale";
+            this.chxProfitAndSale.Size = new System.Drawing.Size(193, 25);
+            this.chxProfitAndSale.TabIndex = 4;
+            this.chxProfitAndSale.Text = "Profit And Sale Report";
+            this.chxProfitAndSale.UseVisualStyleBackColor = true;
+            // 
+            // chxAccountsReport
+            // 
+            this.chxAccountsReport.AutoSize = true;
+            this.chxAccountsReport.Location = new System.Drawing.Point(6, 71);
+            this.chxAccountsReport.Name = "chxAccountsReport";
+            this.chxAccountsReport.Size = new System.Drawing.Size(152, 25);
+            this.chxAccountsReport.TabIndex = 3;
+            this.chxAccountsReport.Text = "Accounts Report";
+            this.chxAccountsReport.UseVisualStyleBackColor = true;
+            // 
+            // chxFastRunningReport
+            // 
+            this.chxFastRunningReport.AutoSize = true;
+            this.chxFastRunningReport.Location = new System.Drawing.Point(6, 28);
+            this.chxFastRunningReport.Name = "chxFastRunningReport";
+            this.chxFastRunningReport.Size = new System.Drawing.Size(176, 25);
+            this.chxFastRunningReport.TabIndex = 2;
+            this.chxFastRunningReport.Text = "Fast Running Report";
+            this.chxFastRunningReport.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.chxUpdatePosExpenses);
+            this.groupBox3.Controls.Add(this.chxViewPosExpenses);
             this.groupBox3.Controls.Add(this.chxSearchItems);
             this.groupBox3.Controls.Add(this.chxRefundBill);
             this.groupBox3.Controls.Add(this.chxCreateBill);
             this.groupBox3.ForeColor = System.Drawing.Color.Navy;
-            this.groupBox3.Location = new System.Drawing.Point(253, 79);
+            this.groupBox3.Location = new System.Drawing.Point(353, 79);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(241, 237);
             this.groupBox3.TabIndex = 7;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Point Of Sale Roles";
+            // 
+            // chxUpdatePosExpenses
+            // 
+            this.chxUpdatePosExpenses.AutoSize = true;
+            this.chxUpdatePosExpenses.Location = new System.Drawing.Point(6, 198);
+            this.chxUpdatePosExpenses.Name = "chxUpdatePosExpenses";
+            this.chxUpdatePosExpenses.Size = new System.Drawing.Size(154, 25);
+            this.chxUpdatePosExpenses.TabIndex = 10;
+            this.chxUpdatePosExpenses.Text = "Update Expenses";
+            this.chxUpdatePosExpenses.UseVisualStyleBackColor = true;
+            this.chxUpdatePosExpenses.CheckedChanged += new System.EventHandler(this.chxUpdatePosExpenses_CheckedChanged);
+            // 
+            // chxViewPosExpenses
+            // 
+            this.chxViewPosExpenses.AutoSize = true;
+            this.chxViewPosExpenses.Location = new System.Drawing.Point(6, 155);
+            this.chxViewPosExpenses.Name = "chxViewPosExpenses";
+            this.chxViewPosExpenses.Size = new System.Drawing.Size(135, 25);
+            this.chxViewPosExpenses.TabIndex = 9;
+            this.chxViewPosExpenses.Text = "View Expenses";
+            this.chxViewPosExpenses.UseVisualStyleBackColor = true;
             // 
             // chxSearchItems
             // 
@@ -111,6 +223,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.chxUpdateInvExpenses);
+            this.groupBox2.Controls.Add(this.chxViewInvExpenses);
             this.groupBox2.Controls.Add(this.chxPrintBarcode);
             this.groupBox2.Controls.Add(this.chxUpdateVendors);
             this.groupBox2.Controls.Add(this.chxViewVendors);
@@ -119,10 +233,31 @@
             this.groupBox2.ForeColor = System.Drawing.Color.Navy;
             this.groupBox2.Location = new System.Drawing.Point(6, 79);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(241, 237);
+            this.groupBox2.Size = new System.Drawing.Size(341, 237);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Inventory Management Roles";
+            // 
+            // chxUpdateInvExpenses
+            // 
+            this.chxUpdateInvExpenses.AutoSize = true;
+            this.chxUpdateInvExpenses.Location = new System.Drawing.Point(179, 71);
+            this.chxUpdateInvExpenses.Name = "chxUpdateInvExpenses";
+            this.chxUpdateInvExpenses.Size = new System.Drawing.Size(154, 25);
+            this.chxUpdateInvExpenses.TabIndex = 8;
+            this.chxUpdateInvExpenses.Text = "Update Expenses";
+            this.chxUpdateInvExpenses.UseVisualStyleBackColor = true;
+            this.chxUpdateInvExpenses.CheckedChanged += new System.EventHandler(this.chxUpdateInvExpenses_CheckedChanged);
+            // 
+            // chxViewInvExpenses
+            // 
+            this.chxViewInvExpenses.AutoSize = true;
+            this.chxViewInvExpenses.Location = new System.Drawing.Point(179, 28);
+            this.chxViewInvExpenses.Name = "chxViewInvExpenses";
+            this.chxViewInvExpenses.Size = new System.Drawing.Size(135, 25);
+            this.chxViewInvExpenses.TabIndex = 7;
+            this.chxViewInvExpenses.Text = "View Expenses";
+            this.chxViewInvExpenses.UseVisualStyleBackColor = true;
             // 
             // chxPrintBarcode
             // 
@@ -198,7 +333,7 @@
             this.btnSetRoles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSetRoles.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSetRoles.ForeColor = System.Drawing.Color.Navy;
-            this.btnSetRoles.Location = new System.Drawing.Point(381, 6);
+            this.btnSetRoles.Location = new System.Drawing.Point(825, 5);
             this.btnSetRoles.Name = "btnSetRoles";
             this.btnSetRoles.Size = new System.Drawing.Size(137, 41);
             this.btnSetRoles.TabIndex = 7;
@@ -212,7 +347,7 @@
             this.panel6.Controls.Add(this.btnSetRoles);
             this.panel6.Location = new System.Drawing.Point(-2, 404);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(533, 58);
+            this.panel6.Size = new System.Drawing.Size(977, 58);
             this.panel6.TabIndex = 39;
             // 
             // label8
@@ -232,25 +367,27 @@
             this.panel7.Controls.Add(this.label8);
             this.panel7.Location = new System.Drawing.Point(-2, -4);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(533, 53);
+            this.panel7.Size = new System.Drawing.Size(977, 53);
             this.panel7.TabIndex = 40;
             // 
-            // SetApplicationUserRolesForm
+            // SetApplicationUserRoles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(528, 456);
+            this.ClientSize = new System.Drawing.Size(971, 456);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.MainGroupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "SetApplicationUserRolesForm";
+            this.Name = "SetApplicationUserRoles";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Set Application User Roles";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.MainGroupBox.ResumeLayout(false);
+            this.MainGroupBox.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -264,7 +401,7 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox MainGroupBox;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox chxViewItems;
         private System.Windows.Forms.CheckBox chxAdmin;
@@ -280,5 +417,16 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox chxDailyReport;
+        private System.Windows.Forms.CheckBox chxStockReport;
+        private System.Windows.Forms.CheckBox chxEmployeeReport;
+        private System.Windows.Forms.CheckBox chxProfitAndSale;
+        private System.Windows.Forms.CheckBox chxAccountsReport;
+        private System.Windows.Forms.CheckBox chxFastRunningReport;
+        private System.Windows.Forms.CheckBox chxUpdatePosExpenses;
+        private System.Windows.Forms.CheckBox chxViewPosExpenses;
+        private System.Windows.Forms.CheckBox chxUpdateInvExpenses;
+        private System.Windows.Forms.CheckBox chxViewInvExpenses;
     }
 }

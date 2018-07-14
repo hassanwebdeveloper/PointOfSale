@@ -12,7 +12,7 @@ namespace POSReports
         /// <summary>
         /// Internal class to represent the dropdown list of the CheckedComboBox
         /// </summary>
-        internal class Dropdown : Form {
+        internal class Dropdown : UserControl {
             // ---------------------------------- internal class CCBoxEventArgs --------------------------------------------
             /// <summary>
             /// Custom EventArgs encapsulating value as to whether the combo box value(s) should be assignd to or not.
@@ -122,7 +122,7 @@ namespace POSReports
             public Dropdown(CheckedComboBox ccbParent) {
                 this.ccbParent = ccbParent;
                 InitializeComponent();
-                this.ShowInTaskbar = false;
+                //this.ShowInTaskbar = false;
                 // Add a handler to notify our parent of ItemCheck events.
                 this.cclb.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.cclb_ItemCheck);
             }
@@ -146,17 +146,18 @@ namespace POSReports
                 // 
                 // Dropdown
                 // 
+                this.Visible = false;
                 this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
                 this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
                 this.BackColor = System.Drawing.SystemColors.Menu;
                 this.ClientSize = new System.Drawing.Size(47, 16);
-                this.ControlBox = false;
+                //this.ControlBox = false;
                 this.Controls.Add(this.cclb);
                 this.ForeColor = System.Drawing.SystemColors.ControlText;
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-                this.MinimizeBox = false;
+                //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+                //this.MinimizeBox = false;
                 this.Name = "ccbParent";
-                this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+                //this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
                 this.ResumeLayout(false);
             }
 
@@ -200,16 +201,17 @@ namespace POSReports
                 dropdownClosed = true;
                 // Set the focus to our parent CheckedComboBox and hide the dropdown check list.
                 ccbParent.Focus();
-                this.Hide();
+                this.Visible = false;
+                //this.Hide();
                 // Notify CheckedComboBox that its dropdown is closed. (NOTE: it does not matter which parameters we pass to
                 // OnDropDownClosed() as long as the argument is CCBoxEventArgs so that the method knows the notification has
                 // come from our code and not from the framework).
                 ccbParent.OnDropDownClosed(new CCBoxEventArgs(null, false));
             }
 
-            protected override void OnActivated(EventArgs e) {
+            public void OnActivated(EventArgs e) {
                 Debug.WriteLine("OnActivated");
-                base.OnActivated(e);
+                //base.OnActivated(e);
                 dropdownClosed = false;
                 // Assign the old string value to compare with the new value for any changes.
                 oldStrValue = ccbParent.Text;
@@ -220,9 +222,9 @@ namespace POSReports
                 }
             }
 
-            protected override void OnDeactivate(EventArgs e) {
+            public void OnDeactivate(EventArgs e) {
                 Debug.WriteLine("OnDeactivate");
-                base.OnDeactivate(e);
+                //base.OnDeactivate(e);
                 CCBoxEventArgs ce = e as CCBoxEventArgs;
                 if (ce != null) {
                     CloseDropdown(ce.AssignValues);
@@ -337,7 +339,10 @@ namespace POSReports
                     count = 1;
                 }
                 dropdown.Size = new Size(this.Size.Width, (dropdown.List.ItemHeight) * count + 2);
-                dropdown.Show(this);
+                //dropdown.Show();
+                dropdown.Visible = true;
+                //dropdown.Show(this);
+                dropdown.OnActivated(null);
             }
         }
 
@@ -345,6 +350,12 @@ namespace POSReports
             // Call the handlers for this event only if the call comes from our code - NOT the framework's!
             // NOTE: that is because the events were being fired in a wrong order, due to the actual dropdown list
             //       of the ComboBox which lies underneath our dropdown and gets involved every time.
+
+            if (dropdown.Visible)
+            {
+                dropdown.OnDeactivate(null);
+            }
+
             if (e is Dropdown.CCBoxEventArgs) {
                 base.OnDropDownClosed(e);
             }

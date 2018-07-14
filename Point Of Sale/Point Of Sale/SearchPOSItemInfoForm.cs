@@ -62,17 +62,9 @@ namespace Point_Of_Sale
 
             POSGridItemInfo itemInfo = this.dgvPOSItems.SelectedRows[0].Tag as POSGridItemInfo;
 
-            if (itemInfo.RemaningQuantity == 0)
-            {
-                MessageBox.Show(this, "Selected item stock is finished.");
-            }
-            else
-            {
-                itemInfo.Quantity += 1;
 
-                this.SelectedItem = itemInfo;
-                this.Close();
-            }
+            this.SelectedItem = itemInfo;
+            this.Close();
         }
 
         private void dgvPOSItems_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

@@ -33,6 +33,7 @@
             this.btnSearch = new System.Windows.Forms.Button();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnManageExpenses = new System.Windows.Forms.Button();
             this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,7 +91,7 @@
             this.panel7.Controls.Add(this.label7);
             this.panel7.Location = new System.Drawing.Point(-2, -2);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(447, 53);
+            this.panel7.Size = new System.Drawing.Size(610, 53);
             this.panel7.TabIndex = 31;
             // 
             // label7
@@ -104,12 +105,29 @@
             this.label7.TabIndex = 34;
             this.label7.Text = "Point Of Sale";
             // 
+            // btnManageExpenses
+            // 
+            this.btnManageExpenses.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
+            this.btnManageExpenses.FlatAppearance.BorderSize = 2;
+            this.btnManageExpenses.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnManageExpenses.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnManageExpenses.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnManageExpenses.ForeColor = System.Drawing.Color.Navy;
+            this.btnManageExpenses.Location = new System.Drawing.Point(437, 80);
+            this.btnManageExpenses.Name = "btnManageExpenses";
+            this.btnManageExpenses.Size = new System.Drawing.Size(159, 41);
+            this.btnManageExpenses.TabIndex = 32;
+            this.btnManageExpenses.Text = "Manage Expenses";
+            this.btnManageExpenses.UseVisualStyleBackColor = true;
+            this.btnManageExpenses.Click += new System.EventHandler(this.btnManageExpenses_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(443, 160);
+            this.ClientSize = new System.Drawing.Size(606, 160);
+            this.Controls.Add(this.btnManageExpenses);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.btnRefund);
@@ -133,6 +151,7 @@
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnManageExpenses;
     }
 }
 

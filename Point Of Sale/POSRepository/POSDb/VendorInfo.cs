@@ -28,5 +28,7 @@ namespace POSRepository
         public virtual List<POSItemInfo> Items { get; set; }
 
         public virtual List<POSItemTransactionInfo> Purchases { get; set; }
+
+        public string CustomData { get; set; }
     }
 }

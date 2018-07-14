@@ -51,9 +51,11 @@ namespace InventoryManagementSystem
 
             this.btnAddItem.Tag = itemToUpdate;
 
-            this.UpdateLayout();
+            this.UpdateLayout(true);
 
             this.tbxItemName.Focus();
+
+            this.tbxShortName.Enabled = false;
         }
 
         public POSItemInfoForm(DataGridViewRow rowToUpdate)
@@ -73,7 +75,7 @@ namespace InventoryManagementSystem
 
             this.btnAddItem.Tag = rowToUpdate;
 
-            this.UpdateLayout();
+            this.UpdateLayout(false);
 
             this.tbxItemName.Focus();
         }
@@ -94,6 +96,12 @@ namespace InventoryManagementSystem
                 return;
             }
 
+            if (string.IsNullOrEmpty(shortName))
+            {
+                MessageBox.Show(this, "Please enter item short name.");
+                return;
+            }
+
             if (this.mVendors == null || this.mVendors.Count == 0 || this.cbxVendor.SelectedIndex < 0)
             {
                 MessageBox.Show(this, "Please select any vendor to add item.");
@@ -105,12 +113,7 @@ namespace InventoryManagementSystem
 
             if (this.mCategories == null || this.mCategories.Count == 0 || this.cbxItemCategory.SelectedIndex < 0)
             {
-                DialogResult diaglogResult = MessageBox.Show(this, "Category is not selected.\n\n Do you want to continue?", "Confirmation Dialog", MessageBoxButtons.YesNo);
-
-                if (diaglogResult == DialogResult.No)
-                {
-                    return;
-                }
+                MessageBox.Show(this, "Please select any category to add item.");
             }
             else
             {
@@ -121,17 +124,24 @@ namespace InventoryManagementSystem
 
             if (this.mTypes == null || this.mTypes.Count == 0 || this.cbxItemType.SelectedIndex < 0)
             {
-                DialogResult diaglogResult = MessageBox.Show(this, "Type is not selected.\n\n Do you want to continue?", "Confirmation Dialog", MessageBoxButtons.YesNo);
-
-                if (diaglogResult == DialogResult.No)
-                {
-                    return;
-                }
+                MessageBox.Show(this, "Please select any type to add item.");
             }
             else
             {
                 type = this.mTypes[this.cbxItemType.SelectedIndex];
             }
+
+            if (string.IsNullOrEmpty(this.tbxBuyingPrice.Text))
+            {
+                MessageBox.Show(this, "Please enter Buying price.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.tbxSellingPrice.Text))
+            {
+                MessageBox.Show(this, "Please enter Selling price.");
+                return;
+            }            
 
             int buyingPrice = Convert.ToInt32(this.tbxBuyingPrice.Text);
             int sellingPrice = Convert.ToInt32(this.tbxSellingPrice.Text);
@@ -236,24 +246,29 @@ namespace InventoryManagementSystem
                         POSFactory.CreateOrUpdatePOSItemInfo(item, name, shortName, buyingPrice, sellingPrice, description, discount, discountInPercent, imageContent, itemsCount, category, type, vendor);
 
                         row.SetValues("", shortName, name, description, imageContent, vendor.Name, type.Name, category.Name, buyingPrice, sellingPrice, discount, discountInPercent ? 1 : 0, itemsCount);
-                        
+
+                        MessageBox.Show(this, "Item has been updated successfully.");
+
                     }
                     else
                     {
-                        bool newPurchase = false;
-                        bool newReturn = false;
+                        //bool newPurchase = false;
+                        //bool newReturn = false;
+                        //int oldItemsCount = 0;
 
-                        if (this.mItemToUpdate.TotalItemsPurchased != itemsCount)
-                        {
-                            if (this.mItemToUpdate.TotalItemsPurchased < itemsCount)
-                            {
-                                newPurchase = true;
-                            }
-                            else
-                            {
-                                newReturn = true;
-                            }
-                        }                        
+                        //if (this.mItemToUpdate.TotalItemsPurchased != itemsCount)
+                        //{
+                        //    oldItemsCount = this.mItemToUpdate.TotalItemsPurchased;
+
+                        //    if (this.mItemToUpdate.TotalItemsPurchased < itemsCount)
+                        //    {
+                        //        newPurchase = true;
+                        //    }
+                        //    else
+                        //    {
+                        //        newReturn = true;
+                        //    }
+                        //}                        
 
                         POSItemInfo item = this.btnAddItem.Tag as POSItemInfo;
 
@@ -264,26 +279,26 @@ namespace InventoryManagementSystem
                         if (this.mItemToUpdate != null)
                         {
                             string errorMsg = string.Empty;
-                            if (newPurchase)
-                            {
-                                POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, true, itemsCount - this.mItemToUpdate.TotalItemsPurchased, buyingPrice);
+                            //if (newPurchase)
+                            //{
+                            //    POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, true, itemsCount - oldItemsCount, buyingPrice);
 
-                                if (transactionItem != null)
-                                {
-                                    item.Transactions.Add(transactionItem);
-                                }
+                            //    if (transactionItem != null)
+                            //    {
+                            //        item.Transactions.Add(transactionItem);
+                            //    }
                                                              
-                            }
+                            //}
 
-                            if (newReturn)
-                            {
-                                POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, false, this.mItemToUpdate.TotalItemsPurchased - itemsCount, buyingPrice);
+                            //if (newReturn)
+                            //{
+                            //    POSItemTransactionItem transactionItem = POSFactory.CreatePOSItemTransactionItem(item, false, oldItemsCount - itemsCount, buyingPrice);
 
-                                if (transactionItem != null)
-                                {
-                                    item.Transactions.Add(transactionItem);
-                                }
-                            }
+                            //    if (transactionItem != null)
+                            //    {
+                            //        item.Transactions.Add(transactionItem);
+                            //    }
+                            //}
 
                             Cursor currentCursor = Cursor.Current;
                             Cursor.Current = Cursors.WaitCursor;
@@ -465,7 +480,7 @@ namespace InventoryManagementSystem
 
         #region Private Methods
 
-        private void UpdateLayout()
+        private void UpdateLayout(bool oldItem)
         {            
             this.dgvPOSItems.Visible = false;
             this.btnUpdate.Visible = false;
@@ -473,14 +488,37 @@ namespace InventoryManagementSystem
             this.btnSaveAll.Visible = false;
             this.btnAddItem.Text = CONST_UPDATE_TEXT;
 
+            if (oldItem)
+            {
+                this.btnPurchase.Visible = true;
+                this.tbxBuyingPrice.Enabled = false;
+                this.nudItemsCount.Enabled = false;
+                this.cbxVendor.Enabled = false;
+                this.cbxItemType.Enabled = false;
+                this.cbxItemCategory.Enabled = false;
+            }
+            
+
             this.Height = this.groupBox1.Height + 105;
         }
 
         private void PopulateDropDownFields(string ddpType = "")
-        {
+        {            
             if (string.IsNullOrEmpty(ddpType))
             {
-                this.mVendors = POSDbUtility.GetAllVendors();
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+
+                try
+                {
+                    this.mVendors = POSDbUtility.GetAllVendors();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(this, "Some error occured in fetching Vendors.\n\n" + errorMsg);
+                }
 
                 List<string> vendors = (from vendor in this.mVendors
                                         where vendor != null
@@ -488,11 +526,25 @@ namespace InventoryManagementSystem
                 
                 this.cbxVendor.Items.Clear();
                 this.cbxVendor.Items.AddRange(vendors.ToArray());
+
+                Cursor.Current = currentCursor;
             }
 
             if (string.IsNullOrEmpty(ddpType) || ddpType == CONST_DDP_TYPE_CATEGORY)
             {
-                this.mCategories = POSDbUtility.GetAllPOSItemCategories();
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+
+                try
+                {
+                    this.mCategories = POSDbUtility.GetAllPOSItemCategories();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(this, "Some error occured in fetching Categories.\n\n" + errorMsg);
+                }                
 
                 List<string> categories = (from category in this.mCategories
                                            where category != null
@@ -501,11 +553,25 @@ namespace InventoryManagementSystem
                 this.cbxItemCategory.Text = string.Empty;
                 this.cbxItemCategory.Items.Clear();
                 this.cbxItemCategory.Items.AddRange(categories.ToArray());
+
+                Cursor.Current = currentCursor;
             }
 
             if (string.IsNullOrEmpty(ddpType) || ddpType == CONST_DDP_TYPE_TYPE)
             {
-                this.mTypes = POSDbUtility.GetAllPOSItemTypes();
+                Cursor currentCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+
+                try
+                {
+                    this.mTypes = POSDbUtility.GetAllPOSItemTypes();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = POSComonUtility.GetInnerExceptionMessage(e);
+                    Cursor.Current = currentCursor;
+                    MessageBox.Show(this, "Some error occured in fetching types.\n\n" + errorMsg);
+                }
 
                 List<string> types = (from type in this.mTypes
                                       where type != null
@@ -514,6 +580,8 @@ namespace InventoryManagementSystem
                 this.cbxItemType.Text = string.Empty;
                 this.cbxItemType.Items.Clear();
                 this.cbxItemType.Items.AddRange(types.ToArray());
+
+                Cursor.Current = currentCursor;
             }
         }
 
@@ -595,6 +663,27 @@ namespace InventoryManagementSystem
                     this.nudItemsCount.Value = this.mItemToUpdate.TotalItemsSold;
                 }
             }
+        }
+
+        private void tbxShortName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            string completeText = textBox.Text;
+
+            if (!char.IsControl(e.KeyChar) && completeText.Length >= 3)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void btnPurchase_Click(object sender, EventArgs e)
+        {
+            PurchaseExistingPOSItem form = new PurchaseExistingPOSItem(this.mItemToUpdate);
+
+            form.ShowDialog(this);
+
+            this.nudItemsCount.Value = this.mItemToUpdate.TotalItemsPurchased;
+            this.tbxBuyingPrice.Text = this.mItemToUpdate.BuyingPrice.ToString();
         }
     }
 }
