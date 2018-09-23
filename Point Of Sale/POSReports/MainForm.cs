@@ -1009,7 +1009,7 @@ namespace POSReports
                 columns.Add(new POSReportColumn() { Name = "Item Name", Width = 40 });
                 columns.Add(new POSReportColumn() { Name = "Sold Count", Width = 20 });
                 columns.Add(new POSReportColumn() { Name = "Total Ammount", Width = 20 });
-                columns.Add(new POSReportColumn() { Name = "Profit", Width = 20 });
+                //columns.Add(new POSReportColumn() { Name = "Profit", Width = 20 });
                 columns.Add(new POSReportColumn() { Name = "Refund Count", Width = 20 });
                 columns.Add(new POSReportColumn() { Name = "Refund Ammount", Width = 20 });
                 columns.Add(new POSReportColumn() { Name = "Exchange Count", Width = 20 });
@@ -1170,7 +1170,7 @@ namespace POSReports
                 metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Date:", RowHeight = 20, Value = DateTime.Now.Date.ToString() });
                 metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Total Sold:", RowHeight = 20, Value = totalSold.ToString() });
                 metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Total Ammount:", RowHeight = 20, Value = totalSoldOfAll.ToString() });
-                metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Total Profit:", RowHeight = 20, Value = totalProfit.ToString() });
+                //metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Total Profit:", RowHeight = 20, Value = totalProfit.ToString() });
                 metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Total Purchased:", RowHeight = 20, Value = totalPurchased.ToString() });
                 metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Purchased Ammount:", RowHeight = 20, Value = totalPurchasedAmmount.ToString() });
                 metaInfos.Add(new POSReportMetaInfo() { ValueColSpan = 1, Label = "Total Returned:", RowHeight = 20, Value = totalReturned.ToString() });
@@ -1194,7 +1194,7 @@ namespace POSReports
                     string name = dataItemDetails.Name;
                     int soldCount = dataItemDetails.SoldCount;
                     int total = dataItemDetails.SoldAmount;
-                    int profit = dataItemDetails.Profit;
+                    //int profit = dataItemDetails.Profit;
                     int refundCount = dataItemDetails.RefundCount;
                     int refundAmmount = dataItemDetails.RefundAmount;
                     int totalExchangeValue = dataItemDetails.ExchangeCount;
@@ -1211,7 +1211,7 @@ namespace POSReports
                                                         name,
                                                         soldCount,
                                                         total,
-                                                        profit,
+                                                        //profit,
                                                         refundCount,
                                                         refundAmmount,
                                                         totalExchangeValue,

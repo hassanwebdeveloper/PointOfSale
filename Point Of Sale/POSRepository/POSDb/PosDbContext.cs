@@ -11,7 +11,7 @@ namespace POSRepository
     {
         public PosDbContext() : base("name=POSDb")
         {
-            Database.SetInitializer<PosDbContext>(new DropCreateDatabaseIfModelChanges<PosDbContext>());
+            Database.SetInitializer<PosDbContext>(null);
         }
 
         public DbSet<VendorInfo> Vendors { get; set; }

@@ -143,18 +143,18 @@ namespace InventoryManagementSystem
 
         private void AddLeftBarCode(string shopName,string strBarCode, string itemName, string price)
         {
-            TSCLIB_DLL.windowsfont(45, 10, 30, 0, 0, 0, "Segoe UI", shopName);
+            TSCLIB_DLL.windowsfont(45, 07, 42, 0, 0, 0, "Segoe UI", shopName);
             TSCLIB_DLL.barcode("100", "55", "128", "70", "1", "0", "2", "2", strBarCode);
-            TSCLIB_DLL.windowsfont(40, 155, 30, 0, 0, 0, "Segoe UI", itemName);
-            TSCLIB_DLL.windowsfont(280, 155, 30, 0, 0, 0, "Segoe UI", price);
+            TSCLIB_DLL.windowsfont(40, 150, 35, 0, 0, 0, "Segoe UI", itemName);
+            TSCLIB_DLL.windowsfont(278, 150, 35, 0, 0, 0, "Segoe UI", price);
         }
 
         private void AddRightBarCode(string shopName, string strBarCode, string itemName, string price)
         {
-            TSCLIB_DLL.windowsfont(455, 10, 30, 0, 0, 0, "Segoe UI", shopName);
+            TSCLIB_DLL.windowsfont(455, 07, 42, 0, 0, 0, "Segoe UI", shopName);
             TSCLIB_DLL.barcode("520", "55", "128", "70", "1", "0", "2", "2", strBarCode);
-            TSCLIB_DLL.windowsfont(450, 155, 30, 0, 0, 0, "Segoe UI", itemName);
-            TSCLIB_DLL.windowsfont(710, 155, 30, 0, 0, 0, "Segoe UI", price);
+            TSCLIB_DLL.windowsfont(450, 150, 35, 0, 0, 0, "Segoe UI", itemName);
+            TSCLIB_DLL.windowsfont(708, 150, 35, 0, 0, 0, "Segoe UI", price);
         }
 
         private void dgvPOSItems_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
