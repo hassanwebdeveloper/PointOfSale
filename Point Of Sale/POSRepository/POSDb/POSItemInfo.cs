@@ -70,6 +70,12 @@ namespace POSRepository
         }
 
         [NotMapped]
+        public int BillDiscount
+        {
+            get;set;
+        }
+
+        [NotMapped]
         public int RemainingQuantity
         {
             get

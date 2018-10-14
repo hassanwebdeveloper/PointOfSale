@@ -141,8 +141,8 @@ namespace Point_Of_Sale
 
             this.lblItemsCount.Text = totalItems.ToString();
             this.lblTotalDiscount.Text = totalDiscount.ToString();
-            this.lblTotal.Text = (totalPrice).ToString();
-            this.lblBalance.Text = amountPaid == 0 ? "0" :(amountPaid - (totalPrice)).ToString();
+            this.lblTotal.Text = (totalPrice - totalDiscount).ToString();
+            this.lblBalance.Text = amountPaid == 0 ? "0" :(amountPaid - (totalPrice - totalDiscount)).ToString();
         }
 
         private void dgvPOSItems_SelectionChanged(object sender, EventArgs e)

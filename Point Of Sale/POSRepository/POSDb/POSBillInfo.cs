@@ -108,7 +108,27 @@ namespace POSRepository
                 return totalDiscount;
             }
         }
-        
+
+        public static string ExtractIdFromBarcode(string barcode)
+        {
+            string id = barcode;
+
+            if (barcode.StartsWith("Bill"))
+            {
+                id = barcode.Replace("Bill", string.Empty);
+
+                for (int i = 0; i < id.Length; i++)
+                {
+                    if (id[i] != '0')
+                    {
+                        id = id.Substring(i);
+                        break;
+                    }
+                }
+            }
+
+            return id;
+        }
 
         public int GetTotalAmount(List<POSRefundInfo> refunds)
         {

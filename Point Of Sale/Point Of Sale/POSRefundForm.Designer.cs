@@ -37,13 +37,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pbxProductImage = new System.Windows.Forms.PictureBox();
             this.dgvPOSItems = new System.Windows.Forms.DataGridView();
-            this.Refunded = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.barcodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellingPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.orderQuantityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ReturnQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bsPosItemInfo = new System.Windows.Forms.BindingSource(this.components);
             this.btnRefund = new System.Windows.Forms.Button();
             this.btnPrintRefundSlip = new System.Windows.Forms.Button();
             this.tbxItemName = new System.Windows.Forms.TextBox();
@@ -60,14 +53,22 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.bsPosItemInfo = new System.Windows.Forms.BindingSource(this.components);
+            this.Refunded = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.barcodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellingPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BillDiscount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.orderQuantityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ReturnQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.pbxProductImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPOSItems)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsPosItemInfo)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bsPosItemInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -122,6 +123,7 @@
             this.barcodeDataGridViewTextBoxColumn,
             this.nameDataGridViewTextBoxColumn,
             this.sellingPriceDataGridViewTextBoxColumn,
+            this.BillDiscount,
             this.orderQuantityDataGridViewTextBoxColumn,
             this.ReturnQty});
             this.dgvPOSItems.DataSource = this.bsPosItemInfo;
@@ -149,50 +151,6 @@
             this.dgvPOSItems.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvPOSItems_DataBindingComplete);
             this.dgvPOSItems.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvPOSItems_EditingControlShowing);
             this.dgvPOSItems.SelectionChanged += new System.EventHandler(this.dgvPOSItems_SelectionChanged);
-            // 
-            // Refunded
-            // 
-            this.Refunded.HeaderText = "";
-            this.Refunded.Name = "Refunded";
-            this.Refunded.Width = 35;
-            // 
-            // barcodeDataGridViewTextBoxColumn
-            // 
-            this.barcodeDataGridViewTextBoxColumn.DataPropertyName = "Barcode";
-            this.barcodeDataGridViewTextBoxColumn.HeaderText = "Barcode";
-            this.barcodeDataGridViewTextBoxColumn.Name = "barcodeDataGridViewTextBoxColumn";
-            this.barcodeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.barcodeDataGridViewTextBoxColumn.Width = 120;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Product Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.Width = 310;
-            // 
-            // sellingPriceDataGridViewTextBoxColumn
-            // 
-            this.sellingPriceDataGridViewTextBoxColumn.DataPropertyName = "SellingPrice";
-            this.sellingPriceDataGridViewTextBoxColumn.HeaderText = "Rate";
-            this.sellingPriceDataGridViewTextBoxColumn.Name = "sellingPriceDataGridViewTextBoxColumn";
-            this.sellingPriceDataGridViewTextBoxColumn.Width = 130;
-            // 
-            // orderQuantityDataGridViewTextBoxColumn
-            // 
-            this.orderQuantityDataGridViewTextBoxColumn.HeaderText = "Quantity";
-            this.orderQuantityDataGridViewTextBoxColumn.Name = "orderQuantityDataGridViewTextBoxColumn";
-            this.orderQuantityDataGridViewTextBoxColumn.Width = 107;
-            // 
-            // ReturnQty
-            // 
-            this.ReturnQty.HeaderText = "Return Quantity";
-            this.ReturnQty.Name = "ReturnQty";
-            this.ReturnQty.Width = 150;
-            // 
-            // bsPosItemInfo
-            // 
-            this.bsPosItemInfo.DataSource = typeof(POSRepository.POSItemInfo);
             // 
             // btnRefund
             // 
@@ -379,6 +337,58 @@
             this.panel6.Size = new System.Drawing.Size(886, 64);
             this.panel6.TabIndex = 31;
             // 
+            // bsPosItemInfo
+            // 
+            this.bsPosItemInfo.DataSource = typeof(POSRepository.POSItemInfo);
+            // 
+            // Refunded
+            // 
+            this.Refunded.HeaderText = "";
+            this.Refunded.Name = "Refunded";
+            this.Refunded.Width = 35;
+            // 
+            // barcodeDataGridViewTextBoxColumn
+            // 
+            this.barcodeDataGridViewTextBoxColumn.DataPropertyName = "Barcode";
+            this.barcodeDataGridViewTextBoxColumn.HeaderText = "Barcode";
+            this.barcodeDataGridViewTextBoxColumn.Name = "barcodeDataGridViewTextBoxColumn";
+            this.barcodeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.barcodeDataGridViewTextBoxColumn.Width = 120;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Product Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.Width = 287;
+            // 
+            // sellingPriceDataGridViewTextBoxColumn
+            // 
+            this.sellingPriceDataGridViewTextBoxColumn.DataPropertyName = "SellingPrice";
+            this.sellingPriceDataGridViewTextBoxColumn.HeaderText = "Rate";
+            this.sellingPriceDataGridViewTextBoxColumn.Name = "sellingPriceDataGridViewTextBoxColumn";
+            this.sellingPriceDataGridViewTextBoxColumn.Width = 90;
+            // 
+            // BillDiscount
+            // 
+            this.BillDiscount.DataPropertyName = "BillDiscount";
+            this.BillDiscount.HeaderText = "Discount";
+            this.BillDiscount.Name = "BillDiscount";
+            this.BillDiscount.ReadOnly = true;
+            this.BillDiscount.Width = 80;
+            // 
+            // orderQuantityDataGridViewTextBoxColumn
+            // 
+            this.orderQuantityDataGridViewTextBoxColumn.HeaderText = "Quantity";
+            this.orderQuantityDataGridViewTextBoxColumn.Name = "orderQuantityDataGridViewTextBoxColumn";
+            this.orderQuantityDataGridViewTextBoxColumn.Width = 90;
+            // 
+            // ReturnQty
+            // 
+            this.ReturnQty.HeaderText = "Return Quantity";
+            this.ReturnQty.Name = "ReturnQty";
+            this.ReturnQty.Width = 150;
+            // 
             // POSRefundForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -402,7 +412,6 @@
             this.Text = "Refund Form";
             ((System.ComponentModel.ISupportInitialize)(this.pbxProductImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPOSItems)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsPosItemInfo)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -412,6 +421,7 @@
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.bsPosItemInfo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -445,6 +455,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn barcodeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn sellingPriceDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BillDiscount;
         private System.Windows.Forms.DataGridViewTextBoxColumn orderQuantityDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ReturnQty;
     }

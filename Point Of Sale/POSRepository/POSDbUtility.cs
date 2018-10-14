@@ -191,9 +191,20 @@ namespace POSRepository
         {
             List<POSItemInfo> lstPOSItemInfos = new List<POSItemInfo>();
 
-            lstPOSItemInfos = (from pOSItem in mDbContext.POSItems.Include("Category").Include("Vendor").Include("Type").Include("BillItems.PosBill")
-                               where pOSItem != null
-                               select pOSItem).ToList();
+            // Get ObjectContext from DBContext
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+            // Construct an ObjectQuery                 
+
+            var data = (from pOSItem in objectContext.CreateObjectSet<POSItemInfo>().Include("Category").Include("Vendor").Include("Type").Include("BillItems.PosBill")
+                        where pOSItem != null
+                        select pOSItem);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSItemInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSItemInfos = data.ToList();
 
             return lstPOSItemInfos;
         }
@@ -281,10 +292,21 @@ namespace POSRepository
         public static List<POSItemType> GetAllPOSItemTypes()
         {
             List<POSItemType> lstPOSItemTypes = new List<POSItemType>();
+            
+            // Get ObjectContext from DBContext
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSItemTypes = (from pOSItemType in mDbContext.POSTypes
-                               where pOSItemType != null
-                               select pOSItemType).ToList();
+            // Construct an ObjectQuery                 
+
+            var data = (from pOSItemType in objectContext.CreateObjectSet<POSItemType>()
+                        where pOSItemType != null
+                        select pOSItemType);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSItemType>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSItemTypes = data.ToList();
 
             return lstPOSItemTypes;
         }
@@ -368,10 +390,21 @@ namespace POSRepository
         public static List<POSItemCategory> GetAllPOSItemCategories()
         {
             List<POSItemCategory> lstPOSItemCategories = new List<POSItemCategory>();
+            
+            // Get ObjectContext from DBContext
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSItemCategories = (from pOSItemCategory in mDbContext.POSCategories
-                                    where pOSItemCategory != null
-                                    select pOSItemCategory).ToList();
+            // Construct an ObjectQuery                 
+
+            var data = (from pOSItemCategory in objectContext.CreateObjectSet<POSItemCategory>()
+                        where pOSItemCategory != null
+                        select pOSItemCategory);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSItemCategory>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSItemCategories = data.ToList();
 
             return lstPOSItemCategories;
         }
@@ -456,10 +489,21 @@ namespace POSRepository
         public static List<POSItemTransactionInfo> GetAllPOSPurchases()
         {
             List<POSItemTransactionInfo> lstPOSPurchases = new List<POSItemTransactionInfo>();
+            
+            // Get ObjectContext from DBContext
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSPurchases = (from posPurchase in mDbContext.POSPurchases
-                               where posPurchase != null
-                               select posPurchase).ToList();
+            // Construct an ObjectQuery                 
+
+            var data = (from posPurchase in objectContext.CreateObjectSet<POSItemTransactionInfo>()
+                        where posPurchase != null
+                        select posPurchase);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSItemTransactionInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSPurchases = data.ToList();
 
             return lstPOSPurchases;
         }
@@ -467,10 +511,21 @@ namespace POSRepository
         public static List<POSItemTransactionInfo> GetAllPOSPurchases(DateTime fromDate, DateTime toDate)
         {
             List<POSItemTransactionInfo> lstPOSPurchases = new List<POSItemTransactionInfo>();
+            
+            // Get ObjectContext from DBContext
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSPurchases = (from posPurchase in mDbContext.POSPurchases
-                               where posPurchase != null && posPurchase.TransactionTime >= fromDate && posPurchase.TransactionTime < toDate
-                               select posPurchase).ToList();
+            // Construct an ObjectQuery                 
+
+            var data = (from posPurchase in objectContext.CreateObjectSet<POSItemTransactionInfo>()
+                        where posPurchase != null && posPurchase.TransactionTime >= fromDate && posPurchase.TransactionTime < toDate
+                        select posPurchase);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSItemTransactionInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSPurchases = data.ToList();
 
             return lstPOSPurchases;
         }
@@ -555,10 +610,21 @@ namespace POSRepository
         public static List<POSAppUser> GetAllPOSAppuser()
         {
             List<POSAppUser> lstPOSAppUsers = new List<POSAppUser>();
+            
+            // Get ObjectContext from DBContext
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSAppUsers = (from pOSAppUser in mDbContext.POSAppUsers
-                               where pOSAppUser != null
-                               select pOSAppUser).ToList();
+            // Construct an ObjectQuery                 
+
+            var data = (from pOSAppUser in objectContext.CreateObjectSet<POSAppUser>()
+                        where pOSAppUser != null
+                        select pOSAppUser);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSAppUser>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSAppUsers = data.ToList();
 
             return lstPOSAppUsers;
         }
@@ -645,15 +711,36 @@ namespace POSRepository
 
             if (salesManId <= 0)
             {
-                lstPOSSalesMans = (from posSalesMan in mDbContext.POSSalesMans
-                                   where posSalesMan != null
-                                   select posSalesMan).ToList();
+                // Get ObjectContext from DBContext
+                var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+                // Construct an ObjectQuery                 
+
+                var data = (from posSalesMan in objectContext.CreateObjectSet<POSSalesMan>()
+                            where posSalesMan != null
+                            select posSalesMan);
+
+                // Set the MergeOption property
+                (data as System.Data.Entity.Core.Objects.ObjectQuery<POSSalesMan>).MergeOption =
+                                 System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+                lstPOSSalesMans = data.ToList();
             }
             else
             {
-                lstPOSSalesMans = (from posSalesMan in mDbContext.POSSalesMans
-                                   where posSalesMan != null && posSalesMan.Id == salesManId
-                                   select posSalesMan).ToList();
+                var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+                // Construct an ObjectQuery                 
+
+                var data = (from posSalesMan in objectContext.CreateObjectSet<POSSalesMan>()
+                            where posSalesMan != null && posSalesMan.Id == salesManId
+                            select posSalesMan);
+
+                // Set the MergeOption property
+                (data as System.Data.Entity.Core.Objects.ObjectQuery<POSSalesMan>).MergeOption =
+                                 System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+                lstPOSSalesMans = data.ToList();
             }
 
             
@@ -743,15 +830,38 @@ namespace POSRepository
 
             if (salesManId <= 0)
             {
-                lstOSAttendanceInfos = (from pOSAttendanceInfo in mDbContext.POSAttendanceInfo
-                                        where pOSAttendanceInfo != null
-                                        select pOSAttendanceInfo).ToList();
+                var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+                // Construct an ObjectQuery                 
+
+                var data = (from pOSAttendanceInfo in objectContext.CreateObjectSet<POSAttendanceInfo>()
+                            where pOSAttendanceInfo != null
+                            select pOSAttendanceInfo);
+
+                // Set the MergeOption property
+                (data as System.Data.Entity.Core.Objects.ObjectQuery<POSAttendanceInfo>).MergeOption =
+                                 System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+                lstOSAttendanceInfos = data.ToList();
             }
             else
             {
-                lstOSAttendanceInfos = (from pOSAttendanceInfo in mDbContext.POSAttendanceInfo
-                                        where pOSAttendanceInfo != null && pOSAttendanceInfo.SalesManId == salesManId && pOSAttendanceInfo.InTime.Date == date
-                                        select pOSAttendanceInfo).ToList();
+                //lstOSAttendanceInfos = (from pOSAttendanceInfo in mDbContext.POSAttendanceInfo
+                //                        where pOSAttendanceInfo != null
+                //                        select pOSAttendanceInfo).ToList();
+                var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+                // Construct an ObjectQuery                 
+
+                var data = (from pOSAttendanceInfo in objectContext.CreateObjectSet<POSAttendanceInfo>()
+                            where pOSAttendanceInfo != null && pOSAttendanceInfo.SalesManId == salesManId && pOSAttendanceInfo.InTime.Date == date
+                            select pOSAttendanceInfo);
+
+                // Set the MergeOption property
+                (data as System.Data.Entity.Core.Objects.ObjectQuery<POSAttendanceInfo>).MergeOption =
+                                 System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+                lstOSAttendanceInfos = data.ToList();
             }
             
 
@@ -838,33 +948,65 @@ namespace POSRepository
         {
             List<POSBillInfo> lstPOSSalesMans = new List<POSBillInfo>();
 
-            lstPOSSalesMans = (from posBill in mDbContext.POSBills.Include("BillItems.PosItem1")
-                               where posBill != null
-                               select posBill).ToList();
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+            // Construct an ObjectQuery                 
+
+            var data = (from posBill in objectContext.CreateObjectSet<POSBillInfo>()
+                        where posBill != null
+                        select posBill);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSBillInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSSalesMans = data.ToList();
 
             return lstPOSSalesMans;
         }
 
         public static List<POSBillInfo> GetAllPOSBillInfo(string itemName)
         {
-            List<POSBillInfo> lstPOSSalesMans = new List<POSBillInfo>();
+            List<POSBillInfo> lstPOSBills = new List<POSBillInfo>();
 
-            lstPOSSalesMans = (from posBill in mDbContext.POSBills.Include("BillItems.PosItem1")
-                               where posBill != null && (posBill.Barcode == itemName || posBill.Id.ToString() == itemName)
-                               select posBill).ToList();
+            string id = POSBillInfo.ExtractIdFromBarcode(itemName);
+            
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            return lstPOSSalesMans;
+            // Construct an ObjectQuery                 
+
+            var data = (from posBill in objectContext.CreateObjectSet<POSBillInfo>()
+                        where posBill != null && posBill.Id.ToString() == id
+                        select posBill);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSBillInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSBills = data.ToList();
+
+            return lstPOSBills;
         }
 
         public static List<POSBillInfo> GetAllPOSBillInfo(DateTime fromDate, DateTime toDate)
         {
-            List<POSBillInfo> lstPOSSalesMans = new List<POSBillInfo>();
+            List<POSBillInfo> lstPOSBills = new List<POSBillInfo>();
+            
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSSalesMans = (from posBill in mDbContext.POSBills.Include("BillItems.PosItem1")
-                               where posBill != null && posBill.BillCreatedDate >= fromDate && posBill.BillCreatedDate < toDate
-                               select posBill).ToList();
+            // Construct an ObjectQuery                 
 
-            return lstPOSSalesMans;
+            var data = (from posBill in objectContext.CreateObjectSet<POSBillInfo>().Include("BillItems.PosItem1")
+                        where posBill != null && posBill.BillCreatedDate >= fromDate && posBill.BillCreatedDate < toDate
+                        select posBill);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSBillInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSBills = data.ToList();
+
+            return lstPOSBills;
         }
 
         public static POSStatusCodes AddPOSBillInfo(POSBillInfo posBill, ref string errorMsg, bool saveChanges)
@@ -949,10 +1091,20 @@ namespace POSRepository
         public static List<POSBillItemInfo> GetAllPOSBillItemInfo()
         {
             List<POSBillItemInfo> lstPosBillItems = new List<POSBillItemInfo>();
+            
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPosBillItems = (from posBillItem in mDbContext.POSBillItems
-                               where posBillItem != null
-                               select posBillItem).ToList();
+            // Construct an ObjectQuery                 
+
+            var data = (from posBillItem in objectContext.CreateObjectSet<POSBillItemInfo>()
+                        where posBillItem != null
+                        select posBillItem);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSBillItemInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPosBillItems = data.ToList();
 
             return lstPosBillItems;
         }
@@ -1039,10 +1191,20 @@ namespace POSRepository
         public static List<POSRefundInfo> GetAllPOSRefundInfo(DateTime fromDate, DateTime toDate, bool refunded)
         {
             List<POSRefundInfo> lstPOSSalesMans = new List<POSRefundInfo>();
+            
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSSalesMans = (from posRefund in mDbContext.POSRefunds
-                               where posRefund != null && posRefund.RefundDate >= fromDate && posRefund.RefundDate < toDate && posRefund.Refunded == refunded
-                               select posRefund).ToList();
+            // Construct an ObjectQuery                 
+
+            var data = (from posRefund in objectContext.CreateObjectSet<POSRefundInfo>()
+                        where posRefund != null && posRefund.RefundDate >= fromDate && posRefund.RefundDate < toDate && posRefund.Refunded == refunded
+                        select posRefund);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSRefundInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSSalesMans = data.ToList();
 
             return lstPOSSalesMans;
         }
@@ -1051,9 +1213,19 @@ namespace POSRepository
         {
             List<POSRefundInfo> lstPOSSalesMans = new List<POSRefundInfo>();
 
-            lstPOSSalesMans = (from posRefund in mDbContext.POSRefunds
-                               where posRefund != null
-                               select posRefund).ToList();
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+            // Construct an ObjectQuery                 
+
+            var data = (from posRefund in objectContext.CreateObjectSet<POSRefundInfo>()
+                        where posRefund != null
+                        select posRefund);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSRefundInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSSalesMans = data.ToList();
 
             return lstPOSSalesMans;
         }
@@ -1141,11 +1313,21 @@ namespace POSRepository
         public static List<SystemSettings> GetAllSystemSettings()
         {
             List<SystemSettings> lstSystemSettings = new List<SystemSettings>();
+            
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstSystemSettings = (from sysettings in mDbContext.SystemSettings
-                               where sysettings != null
-                               select sysettings).ToList();
+            // Construct an ObjectQuery                 
 
+            var data = (from sysettings in objectContext.CreateObjectSet<SystemSettings>()
+                        where sysettings != null
+                        select sysettings);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<SystemSettings>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstSystemSettings = data.ToList();
+            
             return lstSystemSettings;
         }
 
@@ -1233,9 +1415,19 @@ namespace POSRepository
         {
             List<POSExpenseInfo> lstPOSExpenses = new List<POSExpenseInfo>();
 
-            lstPOSExpenses = (from pOSItemCategory in mDbContext.POSExpenses
-                                    where pOSItemCategory != null
-                                    select pOSItemCategory).ToList();
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
+
+            // Construct an ObjectQuery                 
+
+            var data = (from posExpense in objectContext.CreateObjectSet<POSExpenseInfo>()
+                        where posExpense != null
+                        select posExpense);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSExpenseInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSExpenses = data.ToList();
 
             return lstPOSExpenses;
         }
@@ -1243,11 +1435,21 @@ namespace POSRepository
         public static List<POSExpenseInfo> GetAllPOSExpenses(DateTime fromDate, DateTime toDate)
         {
             List<POSExpenseInfo> lstPOSExpenses = new List<POSExpenseInfo>();
+            
+            var objectContext = ((IObjectContextAdapter)mDbContext).ObjectContext;
 
-            lstPOSExpenses = (from posExpense in mDbContext.POSExpenses
-                              where posExpense != null && posExpense.ExpenseTime >= fromDate && posExpense.ExpenseTime < toDate
-                              select posExpense).ToList();
+            // Construct an ObjectQuery                 
 
+            var data = (from posExpense in objectContext.CreateObjectSet<POSExpenseInfo>()
+                        where posExpense != null && posExpense.ExpenseTime >= fromDate && posExpense.ExpenseTime < toDate
+                        select posExpense);
+
+            // Set the MergeOption property
+            (data as System.Data.Entity.Core.Objects.ObjectQuery<POSExpenseInfo>).MergeOption =
+                             System.Data.Entity.Core.Objects.MergeOption.OverwriteChanges;
+
+            lstPOSExpenses = data.ToList();
+            
             return lstPOSExpenses;
         }
 

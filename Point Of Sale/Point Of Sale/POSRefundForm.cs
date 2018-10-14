@@ -114,7 +114,7 @@ namespace Point_Of_Sale
 
                                 //itemInfo.OrderQuantity = billItem.Quantity;
                                 billQuantity.Add(itemInfo.Id, quantity);
-                                itemInfo.Discount = billItem.Discount;
+                                itemInfo.BillDiscount = billItem.Discount;
 
                                 items.Add(itemInfo);
                             }
@@ -132,8 +132,8 @@ namespace Point_Of_Sale
                                 int id = (row.Tag as POSItemInfo).Id;
                                 int count = billQuantity[id];
 
-                                row.Cells[4].Value = count;
-                                row.Cells[5].Value = 0;
+                                row.Cells[5].Value = count;
+                                row.Cells[6].Value = 0;
                             }
                         }
 
@@ -177,7 +177,7 @@ namespace Point_Of_Sale
             {
                 if (row != null && row.Tag is POSItemInfo)
                 {
-                    int refundQuantity = Convert.ToInt32(row.Cells[5].Value);
+                    int refundQuantity = Convert.ToInt32(row.Cells[6].Value);
 
                     if (refundQuantity > 0)
                     {
@@ -234,7 +234,7 @@ namespace Point_Of_Sale
                 e.ColumnIndex == 2 ||
                 e.ColumnIndex == 3 ||
                 e.ColumnIndex == 4 ||
-                e.ColumnIndex == 6)
+                e.ColumnIndex == 5)
             {
                 e.Cancel = true;
                 return;
@@ -295,7 +295,7 @@ namespace Point_Of_Sale
             {
                 if (row != null && row.Tag is POSItemInfo)
                 {
-                    int refundQuantity = Convert.ToInt32(row.Cells[5].Value);
+                    int refundQuantity = Convert.ToInt32(row.Cells[6].Value);
 
                     if (refundQuantity > 0)
                     {
@@ -454,22 +454,22 @@ namespace Point_Of_Sale
 
         private void dgvPOSItems_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 5)
+            if (e.ColumnIndex == 6)
             {
-                if (this.dgvPOSItems.Rows[e.RowIndex].Cells[5].Value != null)
+                if (this.dgvPOSItems.Rows[e.RowIndex].Cells[6].Value != null)
                 {
-                    if (POSComonUtility.IsDigitsOnly(Convert.ToString(this.dgvPOSItems.Rows[e.RowIndex].Cells[5].Value)))
+                    if (POSComonUtility.IsDigitsOnly(Convert.ToString(this.dgvPOSItems.Rows[e.RowIndex].Cells[6].Value)))
                     {
-                        int refundCount = Convert.ToInt32(this.dgvPOSItems.Rows[e.RowIndex].Cells[5].Value);
+                        int refundCount = Convert.ToInt32(this.dgvPOSItems.Rows[e.RowIndex].Cells[6].Value);
                         if (refundCount > 0)
                         {
-                            int quantity = Convert.ToInt32(this.dgvPOSItems.Rows[e.RowIndex].Cells[4].Value);
+                            int quantity = Convert.ToInt32(this.dgvPOSItems.Rows[e.RowIndex].Cells[5].Value);
 
                             if (quantity < refundCount)
                             {
                                 MessageBox.Show(this, "Refund Items can not be greater than quantity.");
 
-                                this.dgvPOSItems.Rows[e.RowIndex].Cells[5].Value = quantity;
+                                this.dgvPOSItems.Rows[e.RowIndex].Cells[6].Value = quantity;
                             }
                             else
                             {
@@ -502,7 +502,7 @@ namespace Point_Of_Sale
         private void dgvPOSItems_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             e.Control.KeyPress -= new KeyPressEventHandler(NumericColumn_KeyPress);
-            if (this.dgvPOSItems.CurrentCell.ColumnIndex == 5) //Desired Column
+            if (this.dgvPOSItems.CurrentCell.ColumnIndex == 6) //Desired Column
             {
                 TextBox tb = e.Control as TextBox;
                 if (tb != null)
